@@ -4,16 +4,16 @@
 {% block content %}
 <div class="page-container" style="text-align: center; padding-top: 20px;">
     <h2 class="page-title" style="color: #00e5ff; font-size: 28px; margin-bottom: 8px;">📱 Student Scanner</h2>
-    <p style="color: #94a3b8; margin-bottom: 20px;">Tap Start to activate camera, voice, and audio.</p>
+    <p style="color: #94a3b8; margin-bottom: 20px;">Tap Start to activate iPad camera and audio.</p>
 
-    <!-- Start Button to Unlock Audio -->
-    <button id="startScanBtn" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #00e5ff, #0284c7); padding: 12px 30px; font-size: 16px; margin-bottom: 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+    <!-- Start Button -->
+    <button id="startScanBtn" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #00e5ff, #0284c7); padding: 14px 32px; font-size: 17px; margin-bottom: 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(0,229,255,0.4);">
         ▶️ Start Scanner
     </button>
 
     <!-- Camera Container -->
     <div id="cameraWrapper" style="display: none; position: relative; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 3px solid #00e5ff; box-shadow: 0 0 40px rgba(0,229,255,0.2); background: #000; aspect-ratio: 4/3;">
-        <video id="videoFeed" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; display: block;"></video>
+        <video id="videoFeed" autoplay playsinline webkit-playsinline muted style="width: 100%; height: 100%; object-fit: cover; display: block;"></video>
         <canvas id="canvas" style="display:none;"></canvas>
 
         <div class="hud hud-tl"></div><div class="hud hud-tr"></div>
@@ -49,7 +49,6 @@ const ctx = canvas.getContext('2d');
 const resultBox = document.getElementById('resultBox');
 let isScanning = false;
 
-// Audio setup (Ding + Buzz)
 function playBeep() {
     try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -86,34 +85,50 @@ function speakVoice(text) {
     }
 }
 
-document.getElementById('startScanBtn').addEventListener('click', function() {
+document.getElementById('startScanBtn').addEventListener('click', async function() {
     this.style.display = 'none';
     document.getElementById('cameraWrapper').style.display = 'block';
     resultBox.style.display = 'flex';
     
-    // Unlock Audio Context on click
     playBeep();
+
+    let stream = null;
     
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-        .then(stream => { 
-            video.srcObject = stream; 
-            // VERY FAST SCAN (every 0.8s)
-            setInterval(() => { if(video.readyState === video.HAVE_ENOUGH_DATA) captureAndSend(); }, 800);
-        })
-        .catch(err => { resultBox.innerHTML = "<span style='color:#ff3366;'>⚠️ Camera blocked.</span>"; });
+    // iPad/iOS Safari Compatible getUserMedia fallback
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+    } catch (e1) {
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        } catch (e2) {
+            resultBox.innerHTML = `<span style="color:#ff3366; font-size:15px; line-height:1.5;">
+                ⚠️ Camera permission denied on iPad.<br>
+                <small style="color:#fff;">1. Make sure address bar starts with <b>https://</b><br>2. Go to iPad <b>Settings ⚙️ → Safari → Camera</b> and set to <b>Allow</b>.</small>
+            </span>`;
+            return;
+        }
+    }
+
+    video.srcObject = stream;
+    try { await video.play(); } catch(e) {}
+
+    setInterval(() => { 
+        if(video.readyState >= 2) captureAndSend(); 
+    }, 800);
 });
 
 async function captureAndSend() {
     if (isScanning) return; 
     isScanning = true;
 
-    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth || 640; 
+    canvas.height = video.videoHeight || 480;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
     try {
         const res = await fetch('/api/scan-student', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ frame: canvas.toDataURL('image/jpeg', 0.6) }) // Compressed for crazy speed
+            body: JSON.stringify({ frame: canvas.toDataURL('image/jpeg', 0.6) })
         });
         const data = await res.json();
         
@@ -122,11 +137,11 @@ async function captureAndSend() {
             speakVoice(`Scan successful. Welcome, ${data.name}`);
             resultBox.innerHTML = `<span style="color:#00ff88; font-size:22px;">✅ ${data.name} (${data.class})<br><small style="color:#fff;">Marked ${data.attendance_status}</small></span>`;
             document.querySelector('.laser-line').style.background = "#00ff88"; 
-            setTimeout(() => { isScanning = false; }, 2000); // Wait 2s to not spam success
+            setTimeout(() => { isScanning = false; }, 2000);
             return;
         } 
         else if (data.status === 'duplicate') {
-            playBeep(); // Ding on already scanned
+            playBeep();
             speakVoice(`Already scanned`);
             resultBox.innerHTML = `<span style="color:#facc15;">⚠️ ${data.name} already scanned at ${data.time}</span>`;
             document.querySelector('.laser-line').style.background = "#facc15"; 
@@ -155,7 +170,6 @@ async function captureAndSend() {
         }
     } catch (e) {}
 
-    // Instant scan if no face was found at all
     setTimeout(() => { isScanning = false; }, 300);
 }
 </script>
