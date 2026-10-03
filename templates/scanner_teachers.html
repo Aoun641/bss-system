@@ -4,16 +4,14 @@
 {% block content %}
 <div class="page-container" style="text-align: center; padding-top: 20px;">
     <h2 class="page-title" style="color: #c084fc; font-size: 28px; margin-bottom: 8px;">👨‍🏫 Teacher Scanner</h2>
-    <p style="color: #94a3b8; margin-bottom: 20px;">Tap Start to activate iPad camera and audio.</p>
+    <p style="color: #94a3b8; margin-bottom: 20px;">Tap Start to activate camera, voice, and audio.</p>
 
-    <!-- Start Button -->
-    <button id="startScanBtn" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #c084fc, #9333ea); color: white; padding: 14px 32px; font-size: 17px; margin-bottom: 20px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(192,132,252,0.4);">
+    <button id="startScanBtn" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #c084fc, #9333ea); color: white; padding: 12px 30px; font-size: 16px; margin-bottom: 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
         ▶️ Start Scanner
     </button>
 
-    <!-- Camera Container -->
     <div id="cameraWrapper" style="display: none; position: relative; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 3px solid #c084fc; box-shadow: 0 0 40px rgba(192,132,252,0.2); background: #000; aspect-ratio: 4/3;">
-        <video id="videoFeed" autoplay playsinline webkit-playsinline muted style="width: 100%; height: 100%; object-fit: cover; display: block;"></video>
+        <video id="videoFeed" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; display: block;"></video>
         <canvas id="canvas" style="display:none;"></canvas>
 
         <div class="hud hud-tl"></div><div class="hud hud-tr"></div>
@@ -21,7 +19,6 @@
         <div class="laser-line"></div>
     </div>
 
-    <!-- Live Results Box -->
     <div id="resultBox" class="glass-card" style="display: none; margin: 25px auto 0; max-width: 600px; padding: 18px; border-radius: 12px; font-size: 18px; font-weight: bold; color: #fff; min-height: 60px; align-items: center; justify-content: center;">
         <span style="color: #94a3b8; animation: pulseText 1.5s infinite;">Scanning surroundings...</span>
     </div>
@@ -85,43 +82,25 @@ function speakVoice(text) {
     }
 }
 
-document.getElementById('startScanBtn').addEventListener('click', async function() {
+document.getElementById('startScanBtn').addEventListener('click', function() {
     this.style.display = 'none';
     document.getElementById('cameraWrapper').style.display = 'block';
     resultBox.style.display = 'flex';
-    
     playBeep();
-
-    let stream = null;
     
-    try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
-    } catch (e1) {
-        try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        } catch (e2) {
-            resultBox.innerHTML = `<span style="color:#ff3366; font-size:15px; line-height:1.5;">
-                ⚠️ Camera permission denied on iPad.<br>
-                <small style="color:#fff;">1. Make sure address bar starts with <b>https://</b><br>2. Go to iPad <b>Settings ⚙️ → Safari → Camera</b> and set to <b>Allow</b>.</small>
-            </span>`;
-            return;
-        }
-    }
-
-    video.srcObject = stream;
-    try { await video.play(); } catch(e) {}
-
-    setInterval(() => { 
-        if(video.readyState >= 2) captureAndSend(); 
-    }, 800);
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+        .then(stream => { 
+            video.srcObject = stream; 
+            setInterval(() => { if(video.readyState === video.HAVE_ENOUGH_DATA) captureAndSend(); }, 800);
+        })
+        .catch(err => { resultBox.innerHTML = "<span style='color:#ff3366;'>⚠️ Camera blocked.</span>"; });
 });
 
 async function captureAndSend() {
     if (isScanning) return; 
     isScanning = true;
 
-    canvas.width = video.videoWidth || 640; 
-    canvas.height = video.videoHeight || 480;
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
     try {
@@ -171,14 +150,6 @@ async function captureAndSend() {
             setTimeout(() => { isScanning = false; }, 1500);
             return;
         }
-        else if (data.status === 'spoof') {
-            playErrorBuzz();
-            speakVoice("Fake face detected");
-            resultBox.innerHTML = `<span style="color:#ff3366;">🚨 FAKE FACE BLOCKED!</span>`;
-            document.querySelector('.laser-line').style.background = "#ff3366";
-            setTimeout(() => { isScanning = false; }, 2000);
-            return;
-        } 
         else {
             resultBox.innerHTML = `<span style="color:#94a3b8; animation: pulseText 1.5s infinite;">Scanning surroundings...</span>`;
             document.querySelector('.laser-line').style.background = "#c084fc"; 

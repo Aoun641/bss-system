@@ -22,8 +22,6 @@ from config import Config
 from init_database import init_db
 from face_engine.enrollment import enroll_face
 from face_engine.recognition import recognize_face
-from face_engine.liveness import check_liveness
-from face_engine.utils import decode_base64_image
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -203,9 +201,10 @@ def register_student():
         emb, _ = enroll_face(images)
         if emb is None: return jsonify({"success": False, "error": "No face detected in photos."}), 400
         try:
-            db.execute("INSERT INTO students (full_name, father_name, class_name, section, gr_number, phone, sibling_of, face_embedding, photo_b64) VALUES (?,?,?,?,?,?,?,?,?)", (data["full_name"].strip(), data["father_name"].strip(), data["class_name"], data["section"], data["gr_number"].strip(), phone, data.get("sibling_of"), emb, images[0]))
+            primary_img = images[0]
+            db.execute("INSERT INTO students (full_name, father_name, class_name, section, gr_number, phone, sibling_of, face_embedding, photo_b64) VALUES (?,?,?,?,?,?,?,?,?)", (data["full_name"].strip(), data["father_name"].strip(), data["class_name"], data["section"], data["gr_number"].strip(), phone, data.get("sibling_of"), emb, primary_img))
             db.commit(); sid = db.execute("SELECT last_insert_rowid() as id").fetchone()["id"]
-            save_face_photo(images[0], "students", sid)
+            save_face_photo(primary_img, "students", sid)
             log_audit("REGISTER", "student", sid, f"Registered student GR#{data['gr_number']} - {data['full_name']}", session["user"], request.remote_addr)
             return jsonify({"success": True, "id": sid})
         except sqlite3.IntegrityError: return jsonify({"success": False, "error": "GR Number already exists."}), 400
@@ -223,9 +222,10 @@ def register_teacher():
         emb, _ = enroll_face(images)
         if emb is None: return jsonify({"success": False, "error": "No face detected."}), 400
         try:
-            db.execute("INSERT INTO teachers (full_name, father_name, employee_id, subject, designation, department, joining_date, phone, email, face_embedding, photo_b64) VALUES (?,?,?,?,?,?,?,?,?,?,?)", (data["full_name"].strip(), data["father_name"].strip(), data["employee_id"].strip(), data.get("subject", ""), data.get("designation", ""), data.get("department", ""), data.get("joining_date", ""), data.get("phone", "").strip(), data.get("email", ""), emb, images[0]))
+            primary_img = images[0]
+            db.execute("INSERT INTO teachers (full_name, father_name, employee_id, subject, designation, department, joining_date, phone, email, face_embedding, photo_b64) VALUES (?,?,?,?,?,?,?,?,?,?,?)", (data["full_name"].strip(), data["father_name"].strip(), data["employee_id"].strip(), data.get("subject", ""), data.get("designation", ""), data.get("department", ""), data.get("joining_date", ""), data.get("phone", "").strip(), data.get("email", ""), emb, primary_img))
             db.commit(); tid = db.execute("SELECT last_insert_rowid() as id").fetchone()["id"]
-            save_face_photo(images[0], "teachers", tid)
+            save_face_photo(primary_img, "teachers", tid)
             log_audit("REGISTER", "teacher", tid, f"Registered teacher EMP#{data['employee_id']} - {data['full_name']}", session["user"], request.remote_addr)
             return jsonify({"success": True, "id": tid})
         except sqlite3.IntegrityError: return jsonify({"success": False, "error": "Employee ID already exists."}), 400
@@ -328,10 +328,7 @@ def delete_teacher(tid):
     if t: db.execute("UPDATE teachers SET is_active=0 WHERE id=?", (tid,)); db.commit()
     return jsonify({"success": True})
 
-
-# ==========================================
-# SCANNERS (Fast + Voice + Unrecognized Logic)
-# ==========================================
+# ─────────── FAST SCANNERS (NO LIVENESS) ───────────
 @app.route("/scanner-students")
 @login_required
 def scanner_students():
@@ -354,7 +351,7 @@ def scan_student():
     
     sid, ftype, face_box = recognize_face(frame_b64, known_list)
     
-    # NEW LOGIC: Face in camera, but NOT in database
+    # Face in camera, but NOT registered
     if face_box is not None and sid is None:
         return jsonify({"status": "unrecognized"})
         
@@ -362,15 +359,6 @@ def scan_student():
         return jsonify({"status": "unknown"})
         
     student = db.execute("SELECT * FROM students WHERE id=?", (sid,)).fetchone()
-    
-    try:
-        frame_img = decode_base64_image(frame_b64)
-        strictness = get_setting("liveness_strictness", "High")
-        liveness = check_liveness(frame_img, face_box, strictness)
-        if not liveness["live"]:
-            log_audit("SPOOF_BLOCKED", "security", sid, f"Fake face blocked", session.get("user", "system"), request.remote_addr)
-            return jsonify({"status": "spoof", "message": "Fake face blocked!"})
-    except Exception: pass
     
     existing = db.execute("SELECT scan_time FROM student_attendance WHERE student_id=? AND date=?", (sid, today)).fetchone()
     if existing: return jsonify({"status": "duplicate", "name": student["full_name"], "time": existing["scan_time"]})
@@ -404,7 +392,6 @@ def scan_teacher():
     
     tid, ftype, face_box = recognize_face(frame_b64, known_list)
     
-    # NEW LOGIC: Face in camera, but NOT in database
     if face_box is not None and tid is None:
         return jsonify({"status": "unrecognized"})
         
@@ -416,15 +403,6 @@ def scan_teacher():
     if existing and existing["check_out"] is not None:
         return jsonify({"status": "already_out", "name": teacher["full_name"], "message": f"Already checked out"})
         
-    try:
-        frame_img = decode_base64_image(frame_b64)
-        strictness = get_setting("liveness_strictness", "High")
-        liveness = check_liveness(frame_img, face_box, strictness)
-        if not liveness["live"]:
-            log_audit("SPOOF_BLOCKED", "security", tid, f"Fake face blocked", session.get("user", "system"), request.remote_addr)
-            return jsonify({"status": "spoof", "message": "Fake face blocked!"})
-    except Exception: pass
-    
     if existing is None:
         status = "PRESENT" if now <= get_setting("teacher_late_cutoff", Config.TEACHER_LATE_CUTOFF) else "LATE"
         db.execute("INSERT INTO teacher_attendance (teacher_id, date, check_in, status) VALUES (?,?,?,?)", (tid, today, now, status))
@@ -516,6 +494,7 @@ def settings_page():
         if action == "add_holiday": db.execute("INSERT INTO holidays (date, reason, created_by) VALUES (?,?,?)", (data.get("date"), data.get("reason"), session["user"])); db.commit(); return jsonify({"success": True})
         if action == "delete_holiday": db.execute("DELETE FROM holidays WHERE id=?", (data.get("id"),)); db.commit(); return jsonify({"success": True})
         if action == "remove_device": db.execute("DELETE FROM authorized_devices WHERE id=?", (data.get("id"),)); db.commit(); return jsonify({"success": True})
+
     return render_template("settings.html", settings={r["key"]: r["value"] for r in db.execute("SELECT * FROM settings").fetchall()}, devices=db.execute("SELECT * FROM authorized_devices ORDER BY authorized_at DESC").fetchall(), holidays=db.execute("SELECT * FROM holidays ORDER BY date DESC").fetchall(), audit=db.execute("SELECT * FROM audit_log ORDER BY timestamp DESC LIMIT 20").fetchall())
 
 @app.route("/api/upload-logo", methods=["POST"])
