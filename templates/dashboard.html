@@ -12,56 +12,96 @@
     <div class="holiday-banner">🌴 SUNDAY – No Attendance</div>
     {% endif %}
 
-    <!-- STATS GRID -->
+    <!-- ==================== 3D HOLOGRAPHIC STATS GRID ==================== -->
     <div class="stats-grid">
-        <div class="stat-card glass-card"><div class="stat-icon">👨‍🎓</div><div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back">{{ total_students }}</div><div class="holo-layer holo-mid">{{ total_students }}</div><div class="holo-layer holo-front">{{ total_students }}</div></div></div><div class="stat-label">Total Students</div></div>
-        <div class="stat-card glass-card"><div class="stat-icon">👨‍🏫</div><div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back">{{ total_teachers }}</div><div class="holo-layer holo-mid">{{ total_teachers }}</div><div class="holo-layer holo-front">{{ total_teachers }}</div></div></div><div class="stat-label">Total Teachers</div></div>
-        <div class="stat-card glass-card pulse-green"><div class="stat-icon">📱</div><div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back live-ss-val">{{ student_scans }}</div><div class="holo-layer holo-mid live-ss-val">{{ student_scans }}</div><div class="holo-layer holo-front live-ss-val">{{ student_scans }}</div></div></div><div class="stat-label">Student Scans Today</div></div>
-        <div class="stat-card glass-card pulse-green"><div class="stat-icon">👨‍🏫</div><div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back live-ts-val">{{ teacher_scans }}</div><div class="holo-layer holo-mid live-ts-val">{{ teacher_scans }}</div><div class="holo-layer holo-front live-ts-val">{{ teacher_scans }}</div></div></div><div class="stat-label">Teacher Scans Today</div></div>
-        <div class="stat-card glass-card"><div class="stat-icon">✅</div><div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back live-present-val">{{ present_now }}</div><div class="holo-layer holo-mid live-present-val">{{ present_now }}</div><div class="holo-layer holo-front live-present-val">{{ present_now }}</div></div></div><div class="stat-label">Present Now</div></div>
-        <div class="stat-card glass-card status-online"><div class="stat-icon">🟢</div><div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back holo-text">ON</div><div class="holo-layer holo-mid holo-text">ON</div><div class="holo-layer holo-front holo-text">ON</div></div></div><div class="stat-label">System Status</div></div>
+        <div class="stat-card glass-card">
+            <div class="stat-icon">👨‍🎓</div>
+            <div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back">{{ total_students }}</div><div class="holo-layer holo-mid">{{ total_students }}</div><div class="holo-layer holo-front">{{ total_students }}</div></div></div>
+            <div class="stat-label">Total Students</div>
+        </div>
+
+        <div class="stat-card glass-card">
+            <div class="stat-icon">👨‍🏫</div>
+            <div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back">{{ total_teachers }}</div><div class="holo-layer holo-mid">{{ total_teachers }}</div><div class="holo-layer holo-front">{{ total_teachers }}</div></div></div>
+            <div class="stat-label">Total Teachers</div>
+        </div>
+
+        <div class="stat-card glass-card pulse-green">
+            <div class="stat-icon">📱</div>
+            <div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back live-ss-val">{{ student_scans }}</div><div class="holo-layer holo-mid live-ss-val">{{ student_scans }}</div><div class="holo-layer holo-front live-ss-val">{{ student_scans }}</div></div></div>
+            <div class="stat-label">Student Scans Today</div>
+        </div>
+
+        <div class="stat-card glass-card pulse-green">
+            <div class="stat-icon">👨‍🏫</div>
+            <div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back live-ts-val">{{ teacher_scans }}</div><div class="holo-layer holo-mid live-ts-val">{{ teacher_scans }}</div><div class="holo-layer holo-front live-ts-val">{{ teacher_scans }}</div></div></div>
+            <div class="stat-label">Teacher Scans Today</div>
+        </div>
+
+        <div class="stat-card glass-card">
+            <div class="stat-icon">✅</div>
+            <div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back live-present-val">{{ present_now }}</div><div class="holo-layer holo-mid live-present-val">{{ present_now }}</div><div class="holo-layer holo-front live-present-val">{{ present_now }}</div></div></div>
+            <div class="stat-label">Present Now</div>
+        </div>
+
+        <div class="stat-card glass-card status-online">
+            <div class="stat-icon">🟢</div>
+            <div class="holo-container"><div class="holo-wrap"><div class="holo-layer holo-back holo-text">ON</div><div class="holo-layer holo-mid holo-text">ON</div><div class="holo-layer holo-front holo-text">ON</div></div></div>
+            <div class="stat-label">System Status</div>
+        </div>
     </div>
 
     <!-- QUICK ACTIONS -->
-    <div class="quick-actions" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:25px;">
+    <div class="quick-actions">
         <a href="/register-student" class="clean-glow-btn btn-cyan-glow">➕ Register Student</a>
         <a href="/register-teacher" class="clean-glow-btn btn-purple-glow">➕ Register Teacher</a>
         <a href="/scanner-students" class="clean-glow-btn btn-sky-glow">📱 Student Scanner</a>
         <a href="/scanner-teachers" class="clean-glow-btn btn-pink-glow">👨‍🏫 Teacher Scanner</a>
         <a href="/api/report-daily-excel" class="clean-glow-btn btn-green-glow">📥 Today's Excel</a>
         <a href="/api/report-monthly-pdf" class="clean-glow-btn btn-gold-glow">📄 Monthly PDF</a>
-        <button class="delete-trigger-btn" onclick="openAdminAuthModal('dashboard', 'Clear Dashboard Data')" style="margin-left:5px;">
+        
+        <button class="delete-trigger-btn" onclick="openAdminAuthModal('dashboard', 'Clear Dashboard Data')">
             <svg class="svgIcon" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
         </button>
     </div>
 
-    <!-- ABSENT TEACHERS -->
+    <!-- ==================== ABSENT TEACHERS CARDS (MOBILE PERFECT) ==================== -->
     {% if absent_teachers %}
     <div class="alert-section">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:15px;">
             <h3 class="section-title" style="margin:0;">🟣 Absent Teachers Today ({{ absent_teachers|length }})</h3>
-            <button onclick="sendAllAbsentMessages()" class="clean-glow-btn" style="background:linear-gradient(135deg,#25D366,#128C7E); min-width:auto;">📱 Send Message to All</button>
         </div>
+
         {% for t in absent_teachers %}
-        <div class="alert-card alert-teacher glass-card" style="margin-bottom:14px; padding:16px;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px;">
-                <div style="flex:1; min-width:200px;">
-                    <strong style="font-size:16px; color:#00e5ff;">{{ t['full_name'] }}</strong>
-                    <div style="color:#cbd5e1; font-size:13px; margin-top:4px;">EMP#: {{ t['employee_id'] }} | {{ t['designation'] or 'Teacher' }}{% if t['phone'] %}<br>📞 {{ t['phone'] }}{% endif %}</div>
+        <div class="alert-card alert-teacher glass-card absent-card-box">
+            
+            <!-- TOP ROW: Teacher Info & RED ABSENT BADGE -->
+            <div class="absent-card-top">
+                <div class="absent-teacher-info">
+                    <strong class="absent-teacher-name">{{ t['full_name'] }}</strong>
+                    <div class="absent-teacher-sub">
+                        EMP#: {{ t['employee_id'] }} | {{ t['designation'] or 'Teacher' }}
+                        {% if t['phone'] %}<br>📞 {{ t['phone'] }}{% endif %}
+                    </div>
                 </div>
-                <button class="send-btn" onclick="prepareSingleTeacherMessage('{{ t['full_name'] }}', '{{ t['phone'] or '' }}')">
-                    <div class="outline"></div>
-                    <div class="state state--default"><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><p><span style="--i:0">A</span><span style="--i:1">b</span><span style="--i:2">s</span><span style="--i:3">e</span><span style="--i:4">n</span><span style="--i:5">c</span><span style="--i:6">e</span><span style="--i:7">&nbsp;</span><span style="--i:8">M</span><span style="--i:9">s</span><span style="--i:10">g</span></p></div>
-                    <div class="state state--sent"><div class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><p><span style="--i:0">S</span><span style="--i:1">e</span><span style="--i:2">n</span><span style="--i:3">t</span><span style="--i:4">!</span></p></div>
+
+                <!-- RED ABSENT BADGE -->
+                <span class="absent-status-badge">🔴 ABSENT</span>
+            </div>
+
+            <!-- BOTTOM ROW: 2 ACTION BUTTONS (STACKS NEATLY ON MOBILE) -->
+            <div class="absent-card-buttons">
+                <!-- Button 1: Send Absence Msg to Teacher -->
+                <button onclick="sendAbsenceToTeacher('{{ t['full_name'] }}', '{{ t['phone'] or '' }}')" class="absent-action-btn btn-wa-green">
+                    📱 Send Absence Msg
+                </button>
+
+                <!-- Button 2: Submit Reason to Principal -->
+                <button onclick="openReasonModal('{{ t['id'] }}', '{{ t['full_name'] }}', '{{ t['employee_id'] }}')" class="absent-action-btn btn-wa-blue">
+                    📝 Submit Reason to Principal
                 </button>
             </div>
-            <div style="margin-top:14px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.08);">
-                <label style="color:#00e5ff; font-size:13px; display:block; margin-bottom:6px;">✍️ Write Reason for Absence (Saved to Database)</label>
-                <div class="reason-container">
-                    <input type="text" id="reason-{{ t['id'] }}" class="reason-input" placeholder="e.g. Medical leave, Family emergency...">
-                    <button onclick="prepareReasonToPrincipal('{{ t['id'] }}', '{{ t['full_name'] }}', '{{ t['employee_id'] }}')" class="clean-glow-btn btn-reason">📤 Send to Principal</button>
-                </div>
-            </div>
+
         </div>
         {% endfor %}
     </div>
@@ -76,7 +116,7 @@
             <div class="alert-card glass-card {% if s['consecutive_absent'] >= 5 %}alert-critical{% else %}alert-high{% endif %}">
                 <strong style="color:#fff;">{{ s['full_name'] }}</strong> (GR#{{ s['gr_number'] }}) – Absent {{ s['consecutive_absent'] }} days
                 {% if s['phone'] %}
-                <button onclick="prepareStudentParentMessage('{{ s['full_name'] }}', '{{ s['class_name'] }}', '{{ s['phone'] }}')" class="btn-mini" style="background:#25D366; color:#fff; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; margin-left:10px;">📱 WhatsApp Parent</button>
+                <button onclick="sendStudentParentMsg('{{ s['full_name'] }}', '{{ s['class_name'] }}', '{{ s['phone'] }}')" class="btn-mini" style="background:#25D366; color:#fff; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; margin-left:10px;">📱 WhatsApp Parent</button>
                 {% endif %}
             </div>
             {% endif %}
@@ -84,84 +124,425 @@
     </div>
     {% endif %}
 
-    <!-- TABS -->
-    <div style="display:flex; justify-content:center; margin:30px 0 20px;">
+    <!-- TIME PERIOD FILTER TABS -->
+    <div style="display: flex; justify-content: center; margin: 30px 0 20px;">
         <div class="cir-tabs">
-            <input type="radio" name="timeframe" id="tf-day" class="cir-tabs__r" value="day" checked onchange="filterAnalytics('day')"><label for="tf-day" class="cir-tabs__t">Day</label>
-            <input type="radio" name="timeframe" id="tf-week" class="cir-tabs__r" value="week" onchange="filterAnalytics('week')"><label for="tf-week" class="cir-tabs__t">Week</label>
-            <input type="radio" name="timeframe" id="tf-month" class="cir-tabs__r" value="month" onchange="filterAnalytics('month')"><label for="tf-month" class="cir-tabs__t">Month</label>
-            <input type="radio" name="timeframe" id="tf-year" class="cir-tabs__r" value="year" onchange="filterAnalytics('year')"><label for="tf-year" class="cir-tabs__t">Year</label>
+            <input type="radio" name="timeframe" id="tf-day" class="cir-tabs__r" value="day" checked onchange="filterAnalytics('day')">
+            <label for="tf-day" class="cir-tabs__t">Day</label>
+            <input type="radio" name="timeframe" id="tf-week" class="cir-tabs__r" value="week" onchange="filterAnalytics('week')">
+            <label for="tf-week" class="cir-tabs__t">Week</label>
+            <input type="radio" name="timeframe" id="tf-month" class="cir-tabs__r" value="month" onchange="filterAnalytics('month')">
+            <label for="tf-month" class="cir-tabs__t">Month</label>
+            <input type="radio" name="timeframe" id="tf-year" class="cir-tabs__r" value="year" onchange="filterAnalytics('year')">
+            <label for="tf-year" class="cir-tabs__t">Year</label>
         </div>
     </div>
 
-    <!-- CHARTS & LEADERBOARDS -->
+    <!-- CHARTS -->
     <div class="dashboard-grid">
         <div class="glass-card chart-card"><h3 class="section-title">📊 Class Attendance Today</h3><canvas id="classChart" width="400" height="220"></canvas></div>
         <div class="glass-card chart-card"><h3 class="section-title">📈 Last 7 Days Trend</h3><canvas id="trendChart" width="400" height="220"></canvas></div>
     </div>
+
+    <!-- LEADERBOARDS -->
     <div class="dashboard-grid">
         <div class="glass-card"><h3 class="section-title">🥇 Top Students (This Month)</h3><ol class="leaderboard">{% for s in leaderboard_students %}<li><span class="rank-medal">{% if loop.index==1 %}🥇{% elif loop.index==2 %}🥈{% else %}🥉{% endif %}</span><span class="lb-name">{{ s['full_name'] }}</span><span class="lb-class">{{ s['class_name'] }}</span><span class="lb-days">{{ s['days'] }} days</span></li>{% endfor %}</ol></div>
         <div class="glass-card"><h3 class="section-title">🥇 Top Teachers (This Month)</h3><ol class="leaderboard">{% for t in leaderboard_teachers %}<li><span class="rank-medal">{% if loop.index==1 %}🥇{% elif loop.index==2 %}🥈{% else %}🥉{% endif %}</span><span class="lb-name">{{ t['full_name'] }}</span><span class="lb-class">{{ t['designation'] }}</span><span class="lb-days">{{ t['days'] }} days</span></li>{% endfor %}</ol></div>
     </div>
+
+    <!-- RECENT ACTIVITY TABLE -->
     <div class="glass-card">
         <h3 class="section-title">🕒 Recent Activity (Live)</h3>
-        <div class="table-wrap"><table class="data-table"><thead><tr><th>Type</th><th>Name</th><th>ID</th><th>Class/Post</th><th>Time</th><th>Status</th></tr></thead><tbody id="recent-tbody">{% for r in recent_scans %}<tr><td>{{ r['type'] }}</td><td>{{ r['full_name'] }}</td><td>{{ r['id_num'] }}</td><td>{{ r['class_name'] }}</td><td>{{ r['scan_time'] }}</td><td><span class="status-badge status-{{ r['status']|lower }}">{{ r['status'] }}</span></td></tr>{% else %}<tr><td colspan="6" style="text-align:center; padding:20px; color:#94a3b8;">No scans yet today.</td></tr>{% endfor %}</tbody></table></div>
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead><tr><th>Type</th><th>Name</th><th>ID</th><th>Class/Post</th><th>Time</th><th>Status</th></tr></thead>
+                <tbody id="recent-tbody">
+                    {% for r in recent_scans %}
+                    <tr>
+                        <td>{{ r['type'] }}</td><td>{{ r['full_name'] }}</td><td>{{ r['id_num'] }}</td>
+                        <td>{{ r['class_name'] }}</td><td>{{ r['scan_time'] }}</td>
+                        <td><span class="status-badge status-{{ r['status']|lower }}">{{ r['status'] }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== REASON FOR ABSENCE MODAL ==================== -->
+<div id="reasonModal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-box glass-card" style="width: 450px; max-width: 95vw;">
+        <h3 style="color: #3b82f6; margin-top: 0; display:flex; align-items:center; gap:8px;">
+            📝 Submit Absence Reason
+        </h3>
+
+        <div style="background: rgba(15,23,42,0.7); padding: 12px 14px; border-radius: 10px; border: 1px solid #334155; margin-bottom: 15px;">
+            <div style="color: #00e5ff; font-weight: bold; font-size: 16px;" id="modalTeacherName">-</div>
+            <div style="color: #94a3b8; font-size: 13px;" id="modalEmpId">-</div>
+            <div style="color: #25D366; font-size: 12px; margin-top: 4px;">Destination: Principal Muhammad Ali (+92 300 2771395)</div>
+        </div>
+
+        <div style="margin-bottom: 18px;">
+            <label style="color: #cbd5e1; font-size: 13px; display:block; margin-bottom: 6px; font-weight:600;">
+                Write Reason for Absence:
+            </label>
+            <textarea id="modalReasonText" rows="3" placeholder="e.g. Medical leave, Family emergency, Sick leave..." 
+                      style="width:100%; padding:12px; border-radius:8px; border:1px solid #334155; background:#1e293b; color:#fff; font-size:14px; box-sizing:border-box; outline:none; resize:none;"></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button class="btn-cancel" onclick="closeReasonModal()">Cancel</button>
+            <button class="clean-glow-btn" style="background: linear-gradient(135deg,#3b82f6,#1d4ed8); min-width:auto; padding: 10px 20px;" onclick="confirmAndSendReason()">
+                📤 Send to Principal 🚀
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ADMIN CLEAR MODAL -->
+<div id="adminAuthModal" class="admin-modal-overlay" style="display: none;">
+    <div class="admin-modal-box glass-card" style="text-align: center;">
+        <div id="clearModalFormState">
+            <h3 id="modalTargetTitle" style="color: #00e5ff; margin-top: 0; text-align: left;">Confirm Action</h3>
+            <p style="color: #cbd5e1; font-size: 14px; margin-bottom: 12px; text-align: left;">Enter <strong>Admin Password</strong> to proceed:</p>
+            <input type="password" id="adminPasswordInput" placeholder="Enter Admin Password" class="admin-input" autocomplete="off" onkeydown="if(event.key==='Enter')submitClearData()">
+            <div id="modalErrorMessage" style="color: #ff3366; font-size: 13px; margin-top: 8px; display: none; text-align: left;"></div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button class="btn-cancel" onclick="closeAdminAuthModal()">Cancel</button>
+                <button class="btn-confirm-delete" onclick="submitClearData()">Confirm & Delete</button>
+            </div>
+        </div>
+
+        <div id="clearModalAnimState" style="display: none; padding: 25px 0;">
+            <div id="trashStepAnim" class="trash-processing-circle">
+                <svg viewBox="0 0 448 512" style="width: 24px; height: 24px; fill: white;"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+            </div>
+            <div id="tickStepAnim" class="checkbox-wrapper" style="display: none; margin-bottom: 20px;">
+                <input type="checkbox" id="clearSuccessTick">
+                <label for="clearSuccessTick"><div class="tick_mark"></div></label>
+            </div>
+            <h4 id="clearAnimStatusText" style="color: #00e5ff; font-family: 'Orbitron', sans-serif; margin: 15px 0 0; font-size: 18px;">Deleting Data...</h4>
+        </div>
     </div>
 </div>
 
 <a href="/install" class="floating-install-btn">📲 Install as App</a>
 
-<!-- MODALS -->
-<div id="waConfirmModal" class="admin-modal-overlay" style="display:none;">
-    <div class="admin-modal-box glass-card" style="width:420px; max-width:95vw;">
-        <h3 style="color:#25D366; margin-top:0;">📱 Confirm WhatsApp</h3>
-        <div style="background:rgba(15,23,42,0.7); padding:14px; border-radius:10px; margin-bottom:15px;"><div style="margin-bottom:8px;"><span style="color:#94a3b8; font-size:13px;">To: </span><strong id="waRecipientName" style="color:#fff;">-</strong></div><div><span style="color:#94a3b8; font-size:13px;">Phone: </span><strong id="waPhoneNumber" style="color:#00e5ff;">-</strong> <span id="waNumberBadge" style="font-size:11px; padding:2px 8px; border-radius:4px;">-</span></div></div>
-        <div id="waMessagePreview" style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:8px; font-size:13px; max-height:140px; overflow-y:auto; white-space:pre-wrap; margin-bottom:18px;"></div>
-        <div style="display:flex; justify-content:flex-end; gap:10px;"><button class="btn-cancel" onclick="closeWaModal()">Cancel</button><button id="waConfirmBtn" class="clean-glow-btn" style="background:linear-gradient(135deg,#25D366,#128C7E); min-width:auto; padding:8px 14px;" onclick="executeWaSend()">Confirm & Open 🚀</button></div>
-    </div>
-</div>
-<div id="adminAuthModal" class="admin-modal-overlay" style="display:none;">
-    <div class="admin-modal-box glass-card" style="text-align:center;">
-        <div id="clearModalFormState">
-            <h3 style="color:#00e5ff; margin-top:0; text-align:left;">Clear Dashboard Data</h3>
-            <p style="color:#cbd5e1; font-size:14px; margin-bottom:12px; text-align:left;">Enter <strong>Admin Password</strong> to proceed:</p>
-            <input type="password" id="adminPasswordInput" class="admin-input" autocomplete="off" onkeydown="if(event.key==='Enter')submitClearData()">
-            <div id="modalErrorMessage" style="color:#ff3366; font-size:13px; margin-top:8px; display:none; text-align:left;"></div>
-            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:20px;"><button class="btn-cancel" onclick="closeAdminAuthModal()">Cancel</button><button class="clean-glow-btn btn-red-glow" style="min-width:auto; padding:8px 16px;" onclick="submitClearData()">Confirm & Delete</button></div>
-        </div>
-        <div id="clearModalAnimState" style="display:none; padding:25px 0;"><div id="trashStepAnim" class="trash-processing-circle"><svg viewBox="0 0 448 512" style="width:24px; fill:white;"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg></div><div id="tickStepAnim" class="checkbox-wrapper" style="display:none; margin-bottom:20px;"><input type="checkbox" id="clearSuccessTick"><label for="clearSuccessTick"><div class="tick_mark"></div></label></div><h4 id="clearAnimStatusText" style="color:#00e5ff; font-family:'Orbitron',sans-serif; margin:15px 0 0; font-size:18px;">Deleting Data...</h4></div>
-    </div>
-</div>
-
 <style>
-.clean-glow-btn{display:inline-flex;justify-content:center;align-items:center;padding:12px 18px;border-radius:8px;font-family:'Inter',sans-serif;font-weight:600;font-size:14px;color:#fff!important;text-decoration:none!important;border:none;cursor:pointer;transition:all .3s ease;min-width:160px;text-align:center;}.clean-glow-btn:hover{transform:translateY(-2px);filter:brightness(1.2);box-shadow:0 8px 20px rgba(0,0,0,.5);}.btn-cyan-glow{background:linear-gradient(135deg,#06b6d4,#0891b2);border:1px solid #22d3ee;}.btn-purple-glow{background:linear-gradient(135deg,#a855f7,#7e22ce);border:1px solid #d8b4fe;}.btn-sky-glow{background:linear-gradient(135deg,#0ea5e9,#0369a1);border:1px solid #38bdf8;}.btn-pink-glow{background:linear-gradient(135deg,#c084fc,#9333ea);border:1px solid #e9d5ff;}.btn-green-glow{background:linear-gradient(135deg,#10b981,#047857);border:1px solid #34d399;}.btn-gold-glow{background:linear-gradient(135deg,#f59e0b,#b45309);border:1px solid #fbbf24;color:#000!important;}.btn-red-glow{background:linear-gradient(135deg,#ff1744,#d50000);border:1px solid #ff6b6b;}
-.reason-container{display:flex;gap:8px;width:100%;align-items:center;}.reason-input{flex:1;width:100%;padding:10px 12px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#fff;font-size:14px;outline:none;}.reason-input:focus{border-color:#00e5ff;}@media(max-width:550px){.reason-container{flex-direction:column;}.reason-container .clean-glow-btn{width:100%;}.clean-glow-btn{width:100%;}}
-.holo-container{width:100%;display:flex;justify-content:center;perspective:600px;margin:10px 0 15px;}.holo-wrap{position:relative;width:90px;height:60px;transform-style:preserve-3d;display:flex;align-items:center;justify-content:center;animation:holo-wobble 6.2s ease-in-out infinite;pointer-events:none;}@keyframes holo-wobble{0%{transform:rotateX(16deg) rotateY(-18deg)}50%{transform:rotateX(18deg) rotateY(18deg)}100%{transform:rotateX(16deg) rotateY(-18deg)}}.holo-layer{position:absolute;font-family:'Orbitron',sans-serif;font-weight:900;font-size:52px;letter-spacing:-2px;-webkit-text-stroke:1px rgba(0,229,255,.7);background:linear-gradient(90deg,rgba(0,229,255,.18),rgba(0,229,255,.92) 35%,rgba(255,255,255,.9) 60%,rgba(0,229,255,.22));-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 8px 12px rgba(0,0,0,.6));transform-style:preserve-3d;}.holo-back{opacity:.18;filter:blur(1.5px);transform:translateZ(-35px);}.holo-mid{opacity:.42;filter:blur(.8px);transform:translateZ(-17px);}.holo-front{opacity:.98;transform:translateZ(0);}.holo-text{font-size:32px!important;letter-spacing:2px!important;}.holo-wrap::before{content:"";position:absolute;inset:0;border-radius:16px;background:radial-gradient(circle at 40% 35%,rgba(0,229,255,.15),rgba(0,0,0,0) 62%);filter:blur(6px);opacity:.9;transform:translateZ(-40px);}.holo-wrap::after{content:"";position:absolute;inset:0;border-radius:16px;border:1px solid rgba(0,229,255,.2);background:linear-gradient(120deg,rgba(255,255,255,.05),rgba(0,0,0,0));opacity:.55;transform:translateZ(-25px);}
-.delete-trigger-btn{width:42px;height:42px;border-radius:8px;background:linear-gradient(to bottom right,#ff1744,#d50000);border:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;overflow:hidden;position:relative;}.delete-trigger-btn .svgIcon{width:14px;transition:transform .3s;fill:white;}.delete-trigger-btn:hover{width:150px;}.delete-trigger-btn:hover .svgIcon{transform:translateY(120%);}.delete-trigger-btn::before{position:absolute;top:-20px;content:"Clear Dashboard";color:white;transition:all .3s;font-size:2px;opacity:0;font-family:'Inter',sans-serif;font-weight:700;white-space:nowrap;}.delete-trigger-btn:hover::before{font-size:12px;opacity:1;transform:translateY(32px);}
-.send-btn{cursor:pointer;border-radius:8px;border:none;display:flex;align-items:center;justify-content:center;position:relative;transition:all .3s ease;min-width:160px;height:44px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;background:linear-gradient(to bottom,#1e293b,#0f172a);color:#e2e8f0;overflow:hidden;border:1px solid rgba(37,211,102,.3);}.send-btn:hover{transform:scale(1.03);box-shadow:0 0 12px rgba(37,211,102,.4);border-color:#25D366;}.send-btn .state{padding-left:26px;z-index:3;display:flex;position:relative;align-items:center;}.send-btn .state .icon{position:absolute;left:0;transform:scale(1.15);color:#25D366;}.send-btn .state--sent{display:none;}.send-btn:focus .state--default{opacity:0;}.send-btn:focus .state--sent{display:flex;}
-.admin-modal-overlay{position:fixed;inset:0;background:rgba(8,12,24,.85);backdrop-filter:blur(6px);display:flex;justify-content:center;align-items:center;z-index:9999;padding:20px;}.admin-modal-box{background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:28px;width:400px;max-width:95vw;}.admin-input{width:100%;padding:11px 14px;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#fff;font-size:14px;outline:none;box-sizing:border-box;}.btn-cancel{background:#334155;color:#cbd5e1;border:none;padding:9px 18px;border-radius:7px;cursor:pointer;}.trash-processing-circle{width:60px;height:60px;border-radius:50%;margin:0 auto;background:linear-gradient(135deg,#ff1744,#d50000);display:flex;align-items:center;justify-content:center;animation:pulseTrash 1s infinite alternate;}@keyframes pulseTrash{0%{transform:scale(.95)}100%{transform:scale(1.1)}}.checkbox-wrapper input{display:none;}.checkbox-wrapper label{--size:65px;display:block;width:var(--size);height:var(--size);margin:0 auto;background-image:linear-gradient(43deg,#00e5ff,#c084fc,#00ff88);border-radius:50%;box-shadow:0 0 25px rgba(0,229,255,.5);position:relative;overflow:hidden;cursor:pointer;}.checkbox-wrapper label:before{content:"";position:absolute;top:50%;left:0;right:0;width:calc(var(--size)*.7);height:calc(var(--size)*.7);margin:0 auto;background-color:#0f172a;transform:translateY(-50%);border-radius:50%;transition:.2s ease width,.2s ease height;}.checkbox-wrapper .tick_mark{position:absolute;top:-1px;right:0;left:calc(var(--size)*-.05);width:calc(var(--size)*.6);height:calc(var(--size)*.6);margin:0 auto;margin-left:calc(var(--size)*.14);transform:rotateZ(-40deg);}.checkbox-wrapper .tick_mark:before,.checkbox-wrapper .tick_mark:after{content:"";position:absolute;background-color:#fff;border-radius:2px;opacity:0;transition:.2s ease transform,.2s ease opacity;}.checkbox-wrapper .tick_mark:before{left:0;bottom:0;width:calc(var(--size)*.1);height:calc(var(--size)*.3);transform:translateY(calc(var(--size)*-.68));}.checkbox-wrapper .tick_mark:after{left:0;bottom:0;width:100%;height:calc(var(--size)*.1);transform:translateX(calc(var(--size)*.78));}.checkbox-wrapper input[type="checkbox"]:checked+label:before{width:0;height:0;}.checkbox-wrapper input[type="checkbox"]:checked+label .tick_mark:before,.checkbox-wrapper input[type="checkbox"]:checked+label .tick_mark:after{transform:translate(0);opacity:1;}
-.cir-tabs{display:inline-flex;align-items:center;gap:6px;padding:6px;background:#0f172a;border:1px solid rgba(0,229,255,.25);border-radius:999px;box-shadow:0 8px 25px rgba(0,0,0,.6);}.cir-tabs__r{position:absolute;opacity:0;}.cir-tabs__t{display:inline-flex;align-items:center;height:38px;padding:0 22px;border-radius:999px;font-size:14px;font-weight:600;color:#94a3b8;cursor:pointer;transition:all .2s;}.cir-tabs__t:hover{color:#00e5ff;}.cir-tabs__r:checked+.cir-tabs__t{background:linear-gradient(135deg,#00e5ff,#0284c7);color:#000;font-weight:700;box-shadow:0 0 15px rgba(0,229,255,.5);}
-.floating-install-btn{display:none;position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,#00e5ff,#c084fc);color:#000;padding:14px 22px;border-radius:50px;font-weight:900;font-family:'Orbitron',sans-serif;font-size:14px;text-decoration:none!important;box-shadow:0 0 20px rgba(0,229,255,.6);z-index:9999;animation:bounceGlow 2s infinite ease-in-out;}@keyframes bounceGlow{0%,100%{transform:translateY(0);box-shadow:0 0 20px rgba(0,229,255,.6);}50%{transform:translateY(-10px);box-shadow:0 0 30px rgba(192,132,252,.9);}}@media(max-width:1024px){.floating-install-btn{display:flex;}}
+/* ==================== ABSENT TEACHER CARDS (MOBILE PERFECT) ==================== */
+.absent-card-box {
+    padding: 16px !important;
+    margin-bottom: 15px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+}
+
+.absent-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.absent-teacher-name {
+    font-size: 17px;
+    color: #00e5ff;
+    display: block;
+}
+
+.absent-teacher-sub {
+    color: #cbd5e1;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.absent-status-badge {
+    background: rgba(255, 23, 68, 0.2);
+    color: #ff1744;
+    border: 1px solid #ff1744;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.absent-card-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.absent-action-btn {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #ffffff;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-wa-green {
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.btn-wa-blue {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.absent-action-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.2);
+}
+
+@media (max-width: 550px) {
+    .absent-card-buttons {
+        flex-direction: column; /* Stacks cleanly on phones */
+    }
+    .absent-action-btn {
+        width: 100%;
+    }
+}
+
+/* CLEAN GLOW BUTTONS */
+.clean-glow-btn { display: inline-flex; justify-content: center; align-items: center; padding: 12px 18px; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; color: #fff !important; text-decoration: none !important; border: none; cursor: pointer; transition: all 0.3s ease; min-width: 160px; text-align: center; }
+.clean-glow-btn:hover { transform: translateY(-2px); filter: brightness(1.2); box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
+.btn-cyan-glow { background: linear-gradient(135deg, #06b6d4, #0891b2); border: 1px solid #22d3ee; }
+.btn-purple-glow { background: linear-gradient(135deg, #a855f7, #7e22ce); border: 1px solid #d8b4fe; }
+.btn-sky-glow { background: linear-gradient(135deg, #0ea5e9, #0369a1); border: 1px solid #38bdf8; }
+.btn-pink-glow { background: linear-gradient(135deg, #c084fc, #9333ea); border: 1px solid #e9d5ff; }
+.btn-green-glow { background: linear-gradient(135deg, #10b981, #047857); border: 1px solid #34d399; }
+.btn-gold-glow { background: linear-gradient(135deg, #f59e0b, #b45309); border: 1px solid #fbbf24; color: #000 !important; }
+
+/* 3D HOLO NUMBERS */
+.holo-container { width: 100%; display: flex; justify-content: center; perspective: 600px; margin: 10px 0 15px; }
+.holo-wrap { position: relative; width: 90px; height: 60px; transform-style: preserve-3d; display: flex; align-items: center; justify-content: center; animation: holo-wobble 6.2s ease-in-out infinite; pointer-events: none; }
+@keyframes holo-wobble { 0% { transform: rotateX(16deg) rotateY(-18deg); } 50% { transform: rotateX(18deg) rotateY(18deg); } 100% { transform: rotateX(16deg) rotateY(-18deg); } }
+.holo-layer { position: absolute; font-family: 'Orbitron', sans-serif; font-weight: 900; font-size: 52px; letter-spacing: -2px; -webkit-text-stroke: 1px rgba(0, 229, 255, 0.7); background: linear-gradient(90deg, rgba(0, 229, 255, 0.18), rgba(0, 229, 255, 0.92) 35%, rgba(255, 255, 255, 0.9) 60%, rgba(0, 229, 255, 0.22)); -webkit-background-clip: text; color: transparent; filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.6)); transform-style: preserve-3d; }
+.holo-back { opacity: 0.18; filter: blur(1.5px); transform: translateZ(-35px); }
+.holo-mid { opacity: 0.42; filter: blur(0.8px); transform: translateZ(-17px); }
+.holo-front { opacity: 0.98; transform: translateZ(0px); }
+.holo-text { font-size: 32px !important; letter-spacing: 2px !important; }
+
+.delete-trigger-btn { width: 42px; height: 42px; border-radius: 8px; background: linear-gradient(to bottom right, #ff1744, #d50000); border: none; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; overflow: hidden; position: relative; }
+.delete-trigger-btn .svgIcon { width: 14px; fill: white; }
+.delete-trigger-btn:hover { width: 150px; }
+.delete-trigger-btn:hover .svgIcon { transform: translateY(120%); }
+.delete-trigger-btn::before { position: absolute; top: -20px; content: "Clear Dashboard"; color: white; transition: all 0.3s; font-size: 2px; opacity: 0; font-weight: 700; white-space: nowrap; }
+.delete-trigger-btn:hover::before { font-size: 12px; opacity: 1; transform: translateY(32px); }
+
+.admin-modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(8, 12, 24, 0.85); backdrop-filter: blur(6px); display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 20px; }
+.admin-modal-box { background: #0f172a; border: 1px solid #1e293b; box-shadow: 0 0 30px rgba(0, 229, 255, 0.15); border-radius: 12px; padding: 28px; width: 400px; max-width: 92vw; }
+.admin-input { width: 100%; padding: 11px 14px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: #ffffff; font-size: 14px; outline: none; box-sizing: border-box; }
+.btn-cancel { background: #334155; color: #cbd5e1; border: none; padding: 9px 18px; border-radius: 7px; cursor: pointer; }
+.btn-confirm-delete { background: linear-gradient(135deg, #ff1744, #c51162); color: white; border: none; padding: 9px 18px; border-radius: 7px; font-weight: 600; cursor: pointer; }
+
+.trash-processing-circle { width: 60px; height: 60px; border-radius: 50%; margin: 0 auto; background: linear-gradient(135deg, #ff1744, #d50000); display: flex; align-items: center; justify-content: center; animation: pulseTrash 1s infinite alternate; }
+@keyframes pulseTrash { 0% { transform: scale(0.95); } 100% { transform: scale(1.1); } }
+
+.checkbox-wrapper input { display: none; }
+.checkbox-wrapper label { --size: 65px; position: relative; display: block; width: var(--size); height: var(--size); margin: 0 auto; background-image: linear-gradient(43deg, #00e5ff 0%, #c084fc 46%, #00ff88 100%); border-radius: 50%; box-shadow: 0 0 25px rgba(0, 229, 255, 0.5); cursor: pointer; overflow: hidden; }
+.checkbox-wrapper label:before { content: ""; position: absolute; top: 50%; right: 0; left: 0; width: calc(var(--size) * .7); height: calc(var(--size) * .7); margin: 0 auto; background-color: #0f172a; transform: translateY(-50%); border-radius: 50%; transition: 0.2s; }
+.checkbox-wrapper .tick_mark { position: absolute; top: -1px; right: 0; left: calc(var(--size) * -.05); width: calc(var(--size) * .6); height: calc(var(--size) * .6); margin: 0 auto; margin-left: calc(var(--size) * .14); transform: rotateZ(-40deg); }
+.checkbox-wrapper .tick_mark:before, .checkbox-wrapper .tick_mark:after { content: ""; position: absolute; background-color: #fff; border-radius: 2px; opacity: 0; transition: 0.2s; }
+.checkbox-wrapper .tick_mark:before { left: 0; bottom: 0; width: calc(var(--size) * .1); height: calc(var(--size) * .3); transform: translateY(calc(var(--size) * -.68)); }
+.checkbox-wrapper .tick_mark:after { left: 0; bottom: 0; width: 100%; height: calc(var(--size) * .1); transform: translateX(calc(var(--size) * .78)); }
+.checkbox-wrapper input[type="checkbox"]:checked + label:before { width: 0; height: 0; }
+.checkbox-wrapper input[type="checkbox"]:checked + label .tick_mark:before, .checkbox-wrapper input[type="checkbox"]:checked + label .tick_mark:after { transform: translate(0); opacity: 1; }
+
+.cir-tabs { display: inline-flex; align-items: center; gap: 6px; padding: 6px; background: #0f172a; border: 1px solid rgba(0, 229, 255, 0.25); border-radius: 999px; box-shadow: 0 8px 25px rgba(0,0,0,0.6); }
+.cir-tabs__r { position: absolute; opacity: 0; }
+.cir-tabs__t { display: inline-flex; align-items: center; height: 38px; padding: 0 22px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #94a3b8; cursor: pointer; transition: all 0.2s; }
+.cir-tabs__t:hover { color: #00e5ff; }
+.cir-tabs__r:checked + .cir-tabs__t { background: linear-gradient(135deg, #00e5ff, #0284c7); color: #000; font-weight: 700; box-shadow: 0 0 15px rgba(0,229,255,0.5); }
+
+.floating-install-btn { display: none; position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #00e5ff, #c084fc); color: #000; padding: 14px 22px; border-radius: 50px; font-weight: 900; font-family: 'Orbitron', sans-serif; font-size: 14px; text-decoration: none !important; box-shadow: 0 0 20px rgba(0, 229, 255, 0.6); z-index: 9999; animation: bounceGlow 2s infinite ease-in-out; }
+@keyframes bounceGlow { 0%, 100% { transform: translateY(0); box-shadow: 0 0 20px rgba(0,229,255,0.6); } 50% { transform: translateY(-10px); box-shadow: 0 0 30px rgba(192,132,252,0.9); } }
+@media (max-width: 1024px) { .floating-install-btn { display: flex; } }
 </style>
 
-<script id="class-data" type="application/json">[{% for c in class_stats %}{"name":{{ c['class_name']|tojson }},"total":{{ c['total'] }},"present":{{ c['present'] }}}{% if not loop.last %},{% endif %}{% endfor %}]</script>
-<script id="trend-data" type="application/json">[{% for w in week_trend %}{"date":{{ w['date']|tojson }},"count":{{ w['count'] }}}{% if not loop.last %},{% endif %}{% endfor %}]</script>
+<script id="class-data" type="application/json">
+[{% for c in class_stats %}{"name":{{ c['class_name']|tojson }},"total":{{ c['total'] }},"present":{{ c['present'] }}}{% if not loop.last %},{% endif %}{% endfor %}]
+</script>
+<script id="trend-data" type="application/json">
+[{% for w in week_trend %}{"date":{{ w['date']|tojson }},"count":{{ w['count'] }}}{% if not loop.last %},{% endif %}{% endfor %}]
+</script>
 {% endblock %}
 
 {% block extra_js %}
 <script src="/static/js/particles.js"></script>
 <script src="/static/js/dashboard.js"></script>
+
 <script>
-async function refreshHoloStats(){try{const r=await fetch('/api/live-stats');const d=await r.json();document.querySelectorAll('.live-ss-val').forEach(el=>el.textContent=d.student_scans);document.querySelectorAll('.live-ts-val').forEach(el=>el.textContent=d.teacher_scans);document.querySelectorAll('.live-present-val').forEach(el=>el.textContent=d.present);}catch(e){}} setInterval(refreshHoloStats,3000);
-async function filterAnalytics(period){try{const response=await fetch(`/api/analytics-filter?period=${period}`);const data=await response.json();if(data.success){if(data.student_scans!==undefined)document.querySelectorAll('.live-ss-val').forEach(el=>el.textContent=data.student_scans);if(data.teacher_scans!==undefined)document.querySelectorAll('.live-ts-val').forEach(el=>el.textContent=data.teacher_scans);}}catch(e){}}
-function detectAndFormatPkPhone(phoneStr){if(!phoneStr)return{valid:false,formatted:'',display:'No Phone Provided'};let clean=String(phoneStr).replace(/\D/g,'');if(clean.startsWith('03')&&clean.length===11)clean='92'+clean.slice(1);else if(clean.startsWith('3')&&clean.length===10)clean='92'+clean;const isValidPk=(clean.length===12&&clean.startsWith('923'));return{valid:isValidPk,formatted:clean,display:isValidPk?`+${clean.slice(0,2)} ${clean.slice(2,5)} ${clean.slice(5)}`:phoneStr};}
-let pendingWaAction=null;function showWaModal(name,phoneInfo,msg,cb){document.getElementById('waRecipientName').innerText=name;document.getElementById('waPhoneNumber').innerText=phoneInfo.display;const badge=document.getElementById('waNumberBadge');if(phoneInfo.valid){badge.innerText='🟢 Valid Pakistan Number';badge.style.background='rgba(37,211,102,0.2)';badge.style.color='#25D366';document.getElementById('waConfirmBtn').disabled=false;document.getElementById('waConfirmBtn').style.opacity='1';}else{badge.innerText='🔴 Invalid / Unknown Format';badge.style.background='rgba(255,23,68,0.2)';badge.style.color='#ff1744';}document.getElementById('waMessagePreview').innerText=msg;pendingWaAction=cb;document.getElementById('waConfirmModal').style.display='flex';}
-function closeWaModal(){document.getElementById('waConfirmModal').style.display='none';pendingWaAction=null;} function executeWaSend(){if(pendingWaAction){pendingWaAction();closeWaModal();}}
-function prepareSingleTeacherMessage(name,phone){const p=detectAndFormatPkPhone(phone);if(!p.valid){alert('Invalid phone');return;}const msg=`Respected Sir/Madam,\n\nAssalam o Alaikum.\n\nYou have been marked ABSENT today.\n\nPlease inform the Principal if this is a mistake.\n\nJazakAllah Khair.\n- BSS System`;showWaModal(name+' (Teacher)',p,msg,()=>window.open(`https://wa.me/${p.formatted}?text=${encodeURIComponent(msg)}`,'_blank'));}
-function prepareReasonToPrincipal(tid,name,emp){const reasonEl=document.getElementById('reason-'+tid);const reason=reasonEl?reasonEl.value.trim():'';if(!reason){alert('Please write a reason');return;}const p=detectAndFormatPkPhone("03002771395");const msg=`Respected Principal,\n\nAssalam o Alaikum.\n\n*Teacher Absence Reason*\n\nTeacher: ${name}\nEMP#: ${emp}\n\nReason: ${reason}\n\n- BSS System`;showWaModal('Principal (Muhammad Ali)',p,msg,async()=>{window.open(`https://wa.me/${p.formatted}?text=${encodeURIComponent(msg)}`,'_blank');try{await fetch('/api/save-absence-reason',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({teacher_id:tid,teacher_name:name,reason:reason})});reasonEl.value='';}catch(e){}});}
-function sendAllAbsentMessages(){const list=[{% for t in absent_teachers if t['phone'] %}{name:"{{ t['full_name'] }}",phone:"{{ t['phone'] }}"},{% endfor %}];if(!list.length){alert("No teachers with phone");return;}if(!confirm("Send message to "+list.length+" teachers?"))return;list.forEach((t,i)=>{const p=detectAndFormatPkPhone(t.phone);if(p.valid){const msg=`Respected Sir/Madam,\n\nAssalam o Alaikum.\n\nYou have been marked ABSENT today.\n\n- BSS System`;setTimeout(()=>{window.open(`https://wa.me/${p.formatted}?text=${encodeURIComponent(msg)}`,'_blank');},i*1000);}});}
-function prepareStudentParentMessage(name,cls,phone){const p=detectAndFormatPkPhone(phone);if(!p.valid){alert('Invalid phone');return;}const msg=`Dear Parent,\n\nYour child *${name}* (${cls}) has been absent continuously.\n\nPlease contact school management.\n\n- M.ALI Schools`;showWaModal(`${name}'s Parent`,p,msg,()=>window.open(`https://wa.me/${p.formatted}?text=${encodeURIComponent(msg)}`,'_blank'));}
-let activeClearTarget=null;function openAdminAuthModal(target,title){activeClearTarget=target;document.getElementById('adminPasswordInput').value='';document.getElementById('modalErrorMessage').style.display='none';document.getElementById('clearModalFormState').style.display='block';document.getElementById('clearModalAnimState').style.display='none';document.getElementById('adminAuthModal').style.display='flex';document.getElementById('adminPasswordInput').focus();}function closeAdminAuthModal(){document.getElementById('adminAuthModal').style.display='none';activeClearTarget=null;}
-async function submitClearData(){const pwd=document.getElementById('adminPasswordInput').value.trim();const err=document.getElementById('modalErrorMessage');if(!pwd){err.innerText="Enter password";err.style.display='block';return;}try{const r=await fetch('/api/admin/clear-data',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target:activeClearTarget,password:pwd})});const d=await r.json();if(r.ok&&d.success){document.getElementById('clearModalFormState').style.display='none';document.getElementById('clearModalAnimState').style.display='block';document.getElementById('trashStepAnim').style.display='flex';document.getElementById('tickStepAnim').style.display='none';document.getElementById('clearAnimStatusText').innerText="Deleting Data...";document.getElementById('clearAnimStatusText').style.color="#00e5ff";setTimeout(()=>{document.getElementById('trashStepAnim').style.display='none';const tW=document.getElementById('tickStepAnim');tW.style.display='block';const tI=document.getElementById('clearSuccessTick');tI.checked=false;setTimeout(()=>{tI.checked=true;},50);document.getElementById('clearAnimStatusText').innerText="Cleared Successfully!";document.getElementById('clearAnimStatusText').style.color="#00ff88";setTimeout(()=>location.reload(),1500);},1000);}else{err.innerText=d.message||"Failed";err.style.display='block';}}catch(e){err.innerText="Server error";err.style.display='block';}}
+// LIVE STATS
+async function refreshHoloStats() {
+    try {
+        const r = await fetch('/api/live-stats');
+        const d = await r.json();
+        document.querySelectorAll('.live-ss-val').forEach(el => el.textContent = d.student_scans);
+        document.querySelectorAll('.live-ts-val').forEach(el => el.textContent = d.teacher_scans);
+        document.querySelectorAll('.live-present-val').forEach(el => el.textContent = d.present);
+    } catch(e) {}
+}
+setInterval(refreshHoloStats, 3000);
+
+async function filterAnalytics(period) {
+    try {
+        const response = await fetch(`/api/analytics-filter?period=${period}`);
+        const data = await response.json();
+        if (data.success) {
+            if (data.student_scans !== undefined) document.querySelectorAll('.live-ss-val').forEach(el => el.textContent = data.student_scans);
+            if (data.teacher_scans !== undefined) document.querySelectorAll('.live-ts-val').forEach(el => el.textContent = data.teacher_scans);
+        }
+    } catch(e) {}
+}
+
+// PAKISTANI PHONE FORMATTER (0300... -> 92300...)
+function formatPkPhone(phoneStr) {
+    if (!phoneStr) return '';
+    let clean = String(phoneStr).replace(/\D/g, '');
+    if (clean.startsWith('03') && clean.length === 11) clean = '92' + clean.slice(1);
+    else if (clean.startsWith('3') && clean.length === 10) clean = '92' + clean;
+    return clean;
+}
+
+// 1. DIRECT WHATSAPP TO TEACHER
+function sendAbsenceToTeacher(teacherName, rawPhone) {
+    const formattedPhone = formatPkPhone(rawPhone);
+    if (!formattedPhone || formattedPhone.length !== 12) {
+        alert(`⚠️ Phone number "${rawPhone}" for ${teacherName} is invalid.\n\nPlease update the teacher's phone number.`);
+        return;
+    }
+
+    const msg = `Respected Sir/Madam,\n\nAssalam o Alaikum.\n\nThis is an automated notification from M.ALI Schools BSS System.\n\nYou have been marked ABSENT today.\n\nPlease inform the Principal if this is a mistake.\n\nJazakAllah Khair.\n- BSS Attendance System`;
+    
+    // Direct browser redirect opens real WhatsApp instantly!
+    window.location.href = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msg)}`;
+}
+
+// 2. SUBMIT REASON TO PRINCIPAL MODAL LOGIC
+let activeReasonTeacherId = null;
+let activeReasonTeacherName = null;
+let activeReasonEmpId = null;
+
+function openReasonModal(tid, teacherName, empId) {
+    activeReasonTeacherId = tid;
+    activeReasonTeacherName = teacherName;
+    activeReasonEmpId = empId;
+
+    document.getElementById('modalTeacherName').innerText = teacherName;
+    document.getElementById('modalEmpId').innerText = 'EMP#: ' + empId;
+    document.getElementById('modalReasonText').value = '';
+    document.getElementById('reasonModal').style.display = 'flex';
+}
+
+function closeReasonModal() {
+    document.getElementById('reasonModal').style.display = 'none';
+    activeReasonTeacherId = null;
+}
+
+function confirmAndSendReason() {
+    const reasonText = document.getElementById('modalReasonText').value.trim();
+    if (!reasonText) {
+        alert("Please write a reason first.");
+        return;
+    }
+
+    // Save Reason to Database
+    fetch('/api/save-absence-reason', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            teacher_id: activeReasonTeacherId,
+            teacher_name: activeReasonTeacherName,
+            reason: reasonText
+        })
+    });
+
+    // Principal Phone: 03002771395 -> 923002771395
+    const principalPhone = "923002771395";
+    const msg = `Respected Principal,\n\nAssalam o Alaikum.\n\n*Teacher Absence Reason*\n\nTeacher Name: ${activeReasonTeacherName}\nEmployee ID: ${activeReasonEmpId}\n\nReason: ${reasonText}\n\nSubmitted via BSS System.`;
+
+    closeReasonModal();
+    // Direct launch opens real WhatsApp on phone!
+    window.location.href = `https://wa.me/${principalPhone}?text=${encodeURIComponent(msg)}`;
+}
+
+// 3. STUDENT PARENT MESSAGE
+function sendStudentParentMsg(studentName, className, rawPhone) {
+    const formattedPhone = formatPkPhone(rawPhone);
+    if (!formattedPhone || formattedPhone.length !== 12) {
+        alert(`⚠️ Phone number "${rawPhone}" is invalid.`);
+        return;
+    }
+    const msg = `Dear Parent,\n\nAssalam o Alaikum.\n\nYour child *${studentName}* (${className}) has been absent continuously.\n\nPlease contact school management.\n\n- M.ALI Schools`;
+    window.location.href = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(msg)}`;
+}
+
+// ADMIN CLEAR MODAL LOGIC
+let activeClearTarget = null;
+function openAdminAuthModal(target, title) {
+    activeClearTarget = target;
+    document.getElementById('modalTargetTitle').innerText = title || 'Confirm Clear Action';
+    document.getElementById('adminPasswordInput').value = '';
+    document.getElementById('modalErrorMessage').style.display = 'none';
+    document.getElementById('clearModalFormState').style.display = 'block';
+    document.getElementById('clearModalAnimState').style.display = 'none';
+    document.getElementById('adminAuthModal').style.display = 'flex';
+    document.getElementById('adminPasswordInput').focus();
+}
+function closeAdminAuthModal() {
+    document.getElementById('adminAuthModal').style.display = 'none';
+    activeClearTarget = null;
+}
+async function submitClearData() {
+    const password = document.getElementById('adminPasswordInput').value.trim();
+    const errorMsg = document.getElementById('modalErrorMessage');
+    if (!password) { errorMsg.innerText = "Please enter password"; errorMsg.style.display = 'block'; return; }
+
+    try {
+        const response = await fetch('/api/admin/clear-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ target: activeClearTarget, password: password })
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            document.getElementById('clearModalFormState').style.display = 'none';
+            document.getElementById('clearModalAnimState').style.display = 'block';
+            document.getElementById('trashStepAnim').style.display = 'flex';
+            document.getElementById('tickStepAnim').style.display = 'none';
+            document.getElementById('clearAnimStatusText').innerText = "Deleting Data...";
+
+            setTimeout(() => {
+                document.getElementById('trashStepAnim').style.display = 'none';
+                document.getElementById('tickStepAnim').style.display = 'block';
+                document.getElementById('clearSuccessTick').checked = false;
+                setTimeout(() => { document.getElementById('clearSuccessTick').checked = true; }, 50);
+                document.getElementById('clearAnimStatusText').innerText = "Cleared Successfully!";
+                document.getElementById('clearAnimStatusText').style.color = "#00ff88";
+
+                setTimeout(() => { window.location.reload(); }, 1500);
+            }, 1000);
+        } else {
+            errorMsg.innerText = data.message || "Failed to clear data.";
+            errorMsg.style.display = 'block';
+        }
+    } catch (err) {
+        errorMsg.innerText = "Server error occurred.";
+        errorMsg.style.display = 'block';
+    }
+}
 </script>
 {% endblock %}
