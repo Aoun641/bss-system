@@ -4,24 +4,20 @@
 {% block content %}
 <div class="page-container" style="text-align: center; padding-top: 20px;">
     <h2 class="page-title" style="color: #c084fc; font-size: 28px; margin-bottom: 8px;">👨‍🏫 Teacher Scanner</h2>
-    <p style="color: #94a3b8; margin-bottom: 20px;">Tap Start to activate camera and audio.</p>
+    <p style="color: #94a3b8; margin-bottom: 20px;">Tap Start to activate camera, voice, and audio.</p>
 
-    <!-- Start Button to Unlock Audio -->
-    <button id="startScanBtn" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #c084fc, #9333ea); padding: 12px 30px; font-size: 16px; margin-bottom: 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white;">
+    <button id="startScanBtn" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #c084fc, #9333ea); color: white; padding: 12px 30px; font-size: 16px; margin-bottom: 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
         ▶️ Start Scanner
     </button>
 
-    <!-- Camera Container -->
     <div id="cameraWrapper" style="display: none; position: relative; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 3px solid #c084fc; box-shadow: 0 0 40px rgba(192,132,252,0.2); background: #000; aspect-ratio: 4/3;">
         <video id="videoFeed" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; display: block;"></video>
         <canvas id="canvas" style="display:none;"></canvas>
-
         <div class="hud hud-tl"></div><div class="hud hud-tr"></div>
         <div class="hud hud-bl"></div><div class="hud hud-br"></div>
         <div class="laser-line"></div>
     </div>
 
-    <!-- Live Results Box -->
     <div id="resultBox" class="glass-card" style="display: none; margin: 25px auto 0; max-width: 600px; padding: 18px; border-radius: 12px; font-size: 18px; font-weight: bold; color: #fff; min-height: 60px; align-items: center; justify-content: center;">
         <span style="color: #94a3b8; animation: pulseText 1.5s infinite;">Scanning surroundings...</span>
     </div>
@@ -48,7 +44,6 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const resultBox = document.getElementById('resultBox');
 let isScanning = false;
-let scanInterval;
 
 function playBeep() {
     try {
@@ -61,6 +56,19 @@ function playBeep() {
         gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
         osc.connect(gainNode); gainNode.connect(audioCtx.destination);
         osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+    } catch(e) {}
+}
+
+function playErrorBuzz() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
     } catch(e) {}
 }
 
@@ -77,13 +85,12 @@ document.getElementById('startScanBtn').addEventListener('click', function() {
     this.style.display = 'none';
     document.getElementById('cameraWrapper').style.display = 'block';
     resultBox.style.display = 'flex';
-    
     playBeep();
     
     navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
         .then(stream => { 
             video.srcObject = stream; 
-            scanInterval = setInterval(() => { if(video.readyState === video.HAVE_ENOUGH_DATA) captureAndSend(); }, 800);
+            setInterval(() => { if(video.readyState === video.HAVE_ENOUGH_DATA) captureAndSend(); }, 800);
         })
         .catch(err => { resultBox.innerHTML = "<span style='color:#ff3366;'>⚠️ Camera blocked.</span>"; });
 });
@@ -119,6 +126,7 @@ async function captureAndSend() {
             return;
         }
         else if (data.status === 'duplicate') {
+            playBeep(); // Ding on already scanned
             speakVoice(`Please wait before scanning again`);
             resultBox.innerHTML = `<span style="color:#facc15;">⚠️ Wait to scan again: ${data.message}</span>`;
             document.querySelector('.laser-line').style.background = "#facc15"; 
@@ -126,13 +134,23 @@ async function captureAndSend() {
             return;
         } 
         else if (data.status === 'already_out') {
+            playBeep();
             speakVoice(`You have already checked out`);
             resultBox.innerHTML = `<span style="color:#facc15;">⚠️ ${data.message}</span>`;
             document.querySelector('.laser-line').style.background = "#facc15";
             setTimeout(() => { isScanning = false; }, 2000);
             return;
         }
+        else if (data.status === 'unrecognized') {
+            playErrorBuzz();
+            speakVoice(`Face not recognized`);
+            resultBox.innerHTML = `<span style="color:#ff3366;">❌ Face not recognized! Please register first.</span>`;
+            document.querySelector('.laser-line').style.background = "#ff3366";
+            setTimeout(() => { isScanning = false; }, 1500);
+            return;
+        }
         else if (data.status === 'spoof') {
+            playErrorBuzz();
             speakVoice("Fake face detected");
             resultBox.innerHTML = `<span style="color:#ff3366;">🚨 FAKE FACE BLOCKED!</span>`;
             document.querySelector('.laser-line').style.background = "#ff3366";

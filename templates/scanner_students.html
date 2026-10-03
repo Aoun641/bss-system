@@ -4,7 +4,7 @@
 {% block content %}
 <div class="page-container" style="text-align: center; padding-top: 20px;">
     <h2 class="page-title" style="color: #00e5ff; font-size: 28px; margin-bottom: 8px;">📱 Student Scanner</h2>
-    <p style="color: #94a3b8; margin-bottom: 20px;">Tap Start to activate camera and audio.</p>
+    <p style="color: #94a3b8; margin-bottom: 20px;">Tap Start to activate camera, voice, and audio.</p>
 
     <!-- Start Button to Unlock Audio -->
     <button id="startScanBtn" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #00e5ff, #0284c7); padding: 12px 30px; font-size: 16px; margin-bottom: 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
@@ -48,9 +48,8 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const resultBox = document.getElementById('resultBox');
 let isScanning = false;
-let scanInterval;
 
-// Audio setup
+// Audio setup (Ding + Buzz)
 function playBeep() {
     try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -62,6 +61,19 @@ function playBeep() {
         gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
         osc.connect(gainNode); gainNode.connect(audioCtx.destination);
         osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+    } catch(e) {}
+}
+
+function playErrorBuzz() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
     } catch(e) {}
 }
 
@@ -85,10 +97,10 @@ document.getElementById('startScanBtn').addEventListener('click', function() {
     navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
         .then(stream => { 
             video.srcObject = stream; 
-            // Scan faster (every 0.8 seconds)
-            scanInterval = setInterval(() => { if(video.readyState === video.HAVE_ENOUGH_DATA) captureAndSend(); }, 800);
+            // VERY FAST SCAN (every 0.8s)
+            setInterval(() => { if(video.readyState === video.HAVE_ENOUGH_DATA) captureAndSend(); }, 800);
         })
-        .catch(err => { resultBox.innerHTML = "<span style='color:#ff3366;'>⚠️ Camera blocked by browser.</span>"; });
+        .catch(err => { resultBox.innerHTML = "<span style='color:#ff3366;'>⚠️ Camera blocked.</span>"; });
 });
 
 async function captureAndSend() {
@@ -101,7 +113,7 @@ async function captureAndSend() {
     try {
         const res = await fetch('/api/scan-student', {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ frame: canvas.toDataURL('image/jpeg', 0.6) }) // Compressed for speed
+            body: JSON.stringify({ frame: canvas.toDataURL('image/jpeg', 0.6) }) // Compressed for crazy speed
         });
         const data = await res.json();
         
@@ -110,17 +122,27 @@ async function captureAndSend() {
             speakVoice(`Scan successful. Welcome, ${data.name}`);
             resultBox.innerHTML = `<span style="color:#00ff88; font-size:22px;">✅ ${data.name} (${data.class})<br><small style="color:#fff;">Marked ${data.attendance_status}</small></span>`;
             document.querySelector('.laser-line').style.background = "#00ff88"; 
-            setTimeout(() => { isScanning = false; }, 2500); // Wait 2.5s before next scan if success
+            setTimeout(() => { isScanning = false; }, 2000); // Wait 2s to not spam success
             return;
         } 
         else if (data.status === 'duplicate') {
+            playBeep(); // Ding on already scanned
             speakVoice(`Already scanned`);
             resultBox.innerHTML = `<span style="color:#facc15;">⚠️ ${data.name} already scanned at ${data.time}</span>`;
             document.querySelector('.laser-line').style.background = "#facc15"; 
             setTimeout(() => { isScanning = false; }, 2000);
             return;
         } 
+        else if (data.status === 'unrecognized') {
+            playErrorBuzz();
+            speakVoice(`Face not recognized`);
+            resultBox.innerHTML = `<span style="color:#ff3366;">❌ Face not recognized! Please register first.</span>`;
+            document.querySelector('.laser-line').style.background = "#ff3366";
+            setTimeout(() => { isScanning = false; }, 1500);
+            return;
+        }
         else if (data.status === 'spoof') {
+            playErrorBuzz();
             speakVoice("Fake face detected");
             resultBox.innerHTML = `<span style="color:#ff3366;">🚨 FAKE FACE BLOCKED!</span>`;
             document.querySelector('.laser-line').style.background = "#ff3366";
@@ -133,7 +155,7 @@ async function captureAndSend() {
         }
     } catch (e) {}
 
-    // If no face found, scan again very fast
+    // Instant scan if no face was found at all
     setTimeout(() => { isScanning = false; }, 300);
 }
 </script>

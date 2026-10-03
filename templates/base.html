@@ -21,35 +21,37 @@
     <style>
         .nav-links { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .nav-tab-btn {
-            --animation-color: #00e5ff; letter-spacing: 1px; text-decoration: none !important; font-size: 12px;
+            --border-right: 3px; --animation-color: #00e5ff;
+            letter-spacing: 1px; text-decoration: none !important; font-size: 12px;
             font-family: 'Orbitron', 'Inter', sans-serif; font-weight: 700; position: relative; text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.55); display: inline-block; padding: 6px 4px; white-space: nowrap; cursor: pointer; transition: 0.3s;
+            color: rgba(255, 255, 255, 0.45); display: inline-block; padding: 6px 4px; white-space: nowrap; cursor: pointer; transition: 0.3s;
         }
-        .nav-tab-btn:hover { color: var(--animation-color); text-shadow: 0 0 10px var(--animation-color); }
+        .nav-tab-btn .hover-text {
+            position: absolute; box-sizing: border-box; content: attr(data-text); color: var(--animation-color) !important;
+            width: 0%; inset: 0; border-right: var(--border-right) solid var(--animation-color); overflow: hidden;
+            transition: width 0.4s ease-in-out; -webkit-text-stroke: 1px var(--animation-color); padding: 6px 4px; white-space: nowrap; display: flex; align-items: center;
+        }
+        .nav-tab-btn:hover .hover-text { width: 100%; filter: drop-shadow(0 0 12px var(--animation-color)); }
         .nav-tab-btn.nav-logout { --animation-color: #ff3366; }
 
         @media (max-width: 900px) {
             .nav-links {
-                display: none !important; flex-direction: column !important; width: 100%; position: absolute;
-                top: 70px; left: 0; background: rgba(10, 15, 30, 0.98); backdrop-filter: blur(10px);
-                padding: 15px; z-index: 9999; border-bottom: 2px solid #00e5ff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); gap: 0 !important;
+                display: none; flex-direction: column; width: 100%; position: absolute;
+                top: 60px; left: 0; background: rgba(10, 15, 30, 0.95); backdrop-filter: blur(10px);
+                padding: 20px; z-index: 1000; border-bottom: 2px solid #00e5ff;
             }
-            .nav-links.active { display: flex !important; }
-            .nav-tab-btn { width: 100%; padding: 14px 10px !important; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; font-size: 14px; }
-            .nav-toggle { display: block !important; background: transparent; border: 1px solid rgba(0,229,255,0.4); color: #00e5ff; padding: 8px 14px; border-radius: 8px; font-size: 20px; cursor: pointer; }
+            .nav-links.active { display: flex; }
+            .nav-tab-btn { width: 100%; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         }
-        @media (min-width: 901px) { .nav-toggle { display: none; } }
 
-        .bss-footer { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 40px; padding: 20px 10px; border-top: none; }
+        .bss-footer { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 40px; padding: 20px 10px; }
         .brutalist-button {
-            display: flex; align-items: center; justify-content: center; width: 100%; max-width: 300px; min-height: 55px;
+            display: flex; align-items: center; justify-content: center; width: 100%; max-width: 300px; height: 50px;
             background-color: #0f172a; color: #fff; text-decoration: none; font-family: 'Orbitron', sans-serif; font-weight: bold;
-            border: 2px solid #00e5ff; border-radius: 8px; box-shadow: 0 0 20px rgba(0,229,255,0.3); text-align: center; padding: 10px 20px;
+            border: 2px solid #00e5ff; border-radius: 8px; box-shadow: 0 0 15px rgba(0,229,255,0.3); text-align: center;
         }
-        .button-text { display: flex; flex-direction: column; align-items: center; line-height: 1.4; }
-        .button-text span:first-child { font-size: 10px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; }
-        .button-text span:last-child { font-size: 13px; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
-        .copy { color: #94a3b8; font-size: 11.5px; font-family: 'Inter', sans-serif; margin-top: 8px; display: block; text-align: center; }
+        .button-text span:first-child { font-size: 10px; color: #94a3b8; display: block; }
+        .button-text span:last-child { font-size: 14px; color: #fff; }
     </style>
 </head>
 <body>
@@ -62,19 +64,19 @@
             </a>
         </div>
         <div class="nav-links" id="mobileNavLinks">
-            <a href="/dashboard" class="nav-tab-btn">📊 Dashboard</a>
-            <a href="/scanner-students" class="nav-tab-btn">📱 Student Scan</a>
-            <a href="/scanner-teachers" class="nav-tab-btn">👨‍🏫 Teacher Scan</a>
-            <a href="/students" class="nav-tab-btn">👨‍🎓 Students</a>
-            <a href="/teachers" class="nav-tab-btn">📋 Teachers</a>
-            <a href="/history" class="nav-tab-btn">📜 History</a>
-            <a href="/attendance-history" class="nav-tab-btn">📅 Attendance</a>
-            <a href="/absences" class="nav-tab-btn">📝 Absences</a>
-            <a href="/reports" class="nav-tab-btn">📄 Reports</a>
-            <a href="/settings" class="nav-tab-btn">⚙️ Settings</a>
-            <a href="/guide" class="nav-tab-btn">📖 How to Use</a>
-            <a href="/install" class="nav-tab-btn" style="color: #00ff88; text-shadow: 0 0 8px #00ff88;">📲 Install App</a>
-            <a href="/logout" class="nav-tab-btn nav-logout">🚪 Logout</a>
+            <a href="/dashboard" class="nav-tab-btn" data-text="📊 Dashboard"><span class="actual-text">📊 Dashboard</span><span aria-hidden="true" class="hover-text">📊 Dashboard</span></a>
+            <a href="/scanner-students" class="nav-tab-btn" data-text="📱 Student Scan"><span class="actual-text">📱 Student Scan</span><span aria-hidden="true" class="hover-text">📱 Student Scan</span></a>
+            <a href="/scanner-teachers" class="nav-tab-btn" data-text="👨‍🏫 Teacher Scan"><span class="actual-text">👨‍🏫 Teacher Scan</span><span aria-hidden="true" class="hover-text">👨‍🏫 Teacher Scan</span></a>
+            <a href="/students" class="nav-tab-btn" data-text="👨‍🎓 Students"><span class="actual-text">👨‍🎓 Students</span><span aria-hidden="true" class="hover-text">👨‍🎓 Students</span></a>
+            <a href="/teachers" class="nav-tab-btn" data-text="📋 Teachers"><span class="actual-text">📋 Teachers</span><span aria-hidden="true" class="hover-text">📋 Teachers</span></a>
+            <a href="/history" class="nav-tab-btn" data-text="📜 History"><span class="actual-text">📜 History</span><span aria-hidden="true" class="hover-text">📜 History</span></a>
+            <a href="/attendance-history" class="nav-tab-btn" data-text="📅 Attendance"><span class="actual-text">📅 Attendance</span><span aria-hidden="true" class="hover-text">📅 Attendance</span></a>
+            <a href="/absences" class="nav-tab-btn" data-text="📝 Absences"><span class="actual-text">📝 Absences</span><span aria-hidden="true" class="hover-text">📝 Absences</span></a>
+            <a href="/reports" class="nav-tab-btn" data-text="📄 Reports"><span class="actual-text">📄 Reports</span><span aria-hidden="true" class="hover-text">📄 Reports</span></a>
+            <a href="/settings" class="nav-tab-btn" data-text="⚙️ Settings"><span class="actual-text">⚙️ Settings</span><span aria-hidden="true" class="hover-text">⚙️ Settings</span></a>
+            <a href="/guide" class="nav-tab-btn" data-text="📖 How to Use"><span class="actual-text">📖 How to Use</span><span aria-hidden="true" class="hover-text">📖 How to Use</span></a>
+            <a href="/install" class="nav-tab-btn" style="color:#00ff88;">📲 Install App</a>
+            <a href="/logout" class="nav-tab-btn nav-logout" data-text="🚪 Logout"><span class="actual-text">🚪 Logout</span><span aria-hidden="true" class="hover-text">🚪 Logout</span></a>
         </div>
         <button class="nav-toggle" onclick="toggleNav()">☰</button>
     </nav>
@@ -91,24 +93,18 @@
                     <span>Muhammad Ali & Aoun Ali</span>
                 </div>
             </div>
-            <span class="copy">© All Copyrights Reserved to BSS SYSTEM</span>
+            <span style="color:#94a3b8; font-size:11px; margin-top:8px;">© All Copyrights Reserved to BSS SYSTEM</span>
         </footer>
         {% endif %}
     </main>
 
     <script src="/static/js/fingerprint.js?v=3"></script>
-    <script src="/static/js/audio.js?v=3"></script>
     <script>
         function toggleNav() { document.getElementById('mobileNavLinks').classList.toggle('active'); }
         document.querySelectorAll('.nav-tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const nav = document.getElementById('mobileNavLinks');
-                if(nav) nav.classList.remove('active');
-            });
+            btn.addEventListener('click', () => { document.getElementById('mobileNavLinks').classList.remove('active'); });
         });
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js?v=3').catch(function(){});
-        }
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js?v=3').catch(function(){}); }
     </script>
     {% block extra_js %}{% endblock %}
 </body>
