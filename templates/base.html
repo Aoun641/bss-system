@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BSS v2.0">
+    <meta name="theme-color" content="#0A192F">
+
+    <link rel="icon" type="image/png" href="/static/images/icon-192.png?v=3">
+    <link rel="shortcut icon" type="image/png" href="/static/images/icon-192.png?v=3">
+    <link rel="apple-touch-icon" href="/static/images/icon-192.png?v=3">
+    <link rel="manifest" href="/manifest.json">
+
+    <title>{% block title %}BSS v2.0{% endblock %} – M.ALI Schools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=3">
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        .nav-links { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .nav-tab-btn {
+            --animation-color: #00e5ff; letter-spacing: 1px; text-decoration: none !important; font-size: 12px;
+            font-family: 'Orbitron', 'Inter', sans-serif; font-weight: 700; position: relative; text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.55); display: inline-block; padding: 6px 4px; white-space: nowrap; cursor: pointer; transition: 0.3s;
+        }
+        .nav-tab-btn:hover { color: var(--animation-color); text-shadow: 0 0 10px var(--animation-color); }
+        .nav-tab-btn.nav-logout { --animation-color: #ff3366; }
+
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none !important; flex-direction: column !important; width: 100%; position: absolute;
+                top: 70px; left: 0; background: rgba(10, 15, 30, 0.98); backdrop-filter: blur(10px);
+                padding: 15px; z-index: 9999; border-bottom: 2px solid #00e5ff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); gap: 0 !important;
+            }
+            .nav-links.active { display: flex !important; }
+            .nav-tab-btn { width: 100%; padding: 14px 10px !important; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; font-size: 14px; }
+            .nav-toggle { display: block !important; background: transparent; border: 1px solid rgba(0,229,255,0.4); color: #00e5ff; padding: 8px 14px; border-radius: 8px; font-size: 20px; cursor: pointer; }
+        }
+        @media (min-width: 901px) { .nav-toggle { display: none; } }
+
+        .bss-footer { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 40px; padding: 20px 10px; border-top: none; }
+        .brutalist-button {
+            display: flex; align-items: center; justify-content: center; width: 100%; max-width: 300px; min-height: 55px;
+            background-color: #0f172a; color: #fff; text-decoration: none; font-family: 'Orbitron', sans-serif; font-weight: bold;
+            border: 2px solid #00e5ff; border-radius: 8px; box-shadow: 0 0 20px rgba(0,229,255,0.3); text-align: center; padding: 10px 20px;
+        }
+        .button-text { display: flex; flex-direction: column; align-items: center; line-height: 1.4; }
+        .button-text span:first-child { font-size: 10px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; }
+        .button-text span:last-child { font-size: 13px; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
+        .copy { color: #94a3b8; font-size: 11.5px; font-family: 'Inter', sans-serif; margin-top: 8px; display: block; text-align: center; }
+    </style>
+</head>
+<body>
+    {% if session.get('user') %}
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="/dashboard" class="nav-brand-link">
+                <img src="/static/images/icon-192.png?v=3" alt="BSS Logo" class="nav-logo-img">
+                <span class="nav-title">BSS <span class="nav-version">v2.0</span></span>
+            </a>
+        </div>
+        <div class="nav-links" id="mobileNavLinks">
+            <a href="/dashboard" class="nav-tab-btn">📊 Dashboard</a>
+            <a href="/scanner-students" class="nav-tab-btn">📱 Student Scan</a>
+            <a href="/scanner-teachers" class="nav-tab-btn">👨‍🏫 Teacher Scan</a>
+            <a href="/students" class="nav-tab-btn">👨‍🎓 Students</a>
+            <a href="/teachers" class="nav-tab-btn">📋 Teachers</a>
+            <a href="/history" class="nav-tab-btn">📜 History</a>
+            <a href="/attendance-history" class="nav-tab-btn">📅 Attendance</a>
+            <a href="/absences" class="nav-tab-btn">📝 Absences</a>
+            <a href="/reports" class="nav-tab-btn">📄 Reports</a>
+            <a href="/settings" class="nav-tab-btn">⚙️ Settings</a>
+            <a href="/guide" class="nav-tab-btn">📖 How to Use</a>
+            <a href="/install" class="nav-tab-btn" style="color: #00ff88; text-shadow: 0 0 8px #00ff88;">📲 Install App</a>
+            <a href="/logout" class="nav-tab-btn nav-logout">🚪 Logout</a>
+        </div>
+        <button class="nav-toggle" onclick="toggleNav()">☰</button>
+    </nav>
+    {% endif %}
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+
+        {% if session.get('user') %}
+        <footer class="bss-footer">
+            <div class="brutalist-button">
+                <div class="button-text">
+                    <span>System Built By</span>
+                    <span>Muhammad Ali & Aoun Ali</span>
+                </div>
+            </div>
+            <span class="copy">© All Copyrights Reserved to BSS SYSTEM</span>
+        </footer>
+        {% endif %}
+    </main>
+
+    <script src="/static/js/fingerprint.js?v=3"></script>
+    <script src="/static/js/audio.js?v=3"></script>
+    <script>
+        function toggleNav() { document.getElementById('mobileNavLinks').classList.toggle('active'); }
+        document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const nav = document.getElementById('mobileNavLinks');
+                if(nav) nav.classList.remove('active');
+            });
+        });
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js?v=3').catch(function(){});
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

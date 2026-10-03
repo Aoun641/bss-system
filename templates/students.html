@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Manage Students{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <h2 class="page-title">👨‍🎓 Manage Students ({{ count }})</h2>
+        <a href="/register-student" class="btn-neon btn-sm">➕ Add Student</a>
+    </div>
+
+    <div class="glass-card" style="padding: 20px 10px; overflow-x: auto;">
+        <div class="table-wrap">
+            <table class="data-table" style="min-width: 800px;">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>GR#</th>
+                        <th>Name</th>
+                        <th>Father</th>
+                        <th>Class</th>
+                        <th>Section</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in students %}
+                    <tr style="height: 60px;">
+                        <td>
+                            <img src="/student/{{ s['id'] }}/photo"
+                                 onerror="this.src='/static/images/icon-192.png'"
+                                 alt="{{ s['full_name'] }}"
+                                 style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #00e5ff; box-shadow: 0 0 8px rgba(0,229,255,0.35);">
+                        </td>
+                        <td>{{ s['gr_number'] }}</td>
+                        <td style="color: #00e5ff; font-weight: bold;">{{ s['full_name'] }}</td>
+                        <td>{{ s['father_name'] }}</td>
+                        <td>{{ s['class_name'] }}</td>
+                        <td>{{ s['section'] }}</td>
+                        
+                        <td style="display: flex; gap: 10px; justify-content: center; align-items: center; padding-top: 10px;">
+                            <a href="/student/{{ s['id'] }}/view" class="view-btn">
+                                <svg class="svgIcon" viewBox="0 0 576 512"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM128 256a160 160 0 1 1 320 0 160 160 0 1 1 -320 0zm160-80a80 80 0 1 0 0 160 80 80 0 1 0 0-160z"/></svg>
+                            </a>
+                            <a href="/student/{{ s['id'] }}/edit" class="edit-btn">
+                                <span class="edit-text">Edit</span>
+                                <svg class="svg" viewBox="0 0 512 512"><path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8l-11.3 11.3 33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"/></svg>
+                            </a>
+                            <button type="button" onclick="deleteStudent({{ s['id'] }}, '{{ s['full_name'] }}')" class="del-btn">
+                                <svg class="svgIcon" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.view-btn { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(to bottom right, #00e5ff, #0284c7); border: none; font-weight: 600; display: flex; align-items: center; justify-content: center; box-shadow: 0px 0px 15px rgba(0, 229, 255, 0.4); cursor: pointer; transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, border-radius 0.3s ease-in-out; overflow: hidden; position: relative; text-decoration: none; }
+.view-btn .svgIcon { width: 18px; transition: transform 0.3s ease-in-out; fill: white; }
+.view-btn:hover { width: 100px; border-radius: 50px; transform: scale(1.05); box-shadow: 0px 0px 25px rgba(0, 229, 255, 0.6); }
+.view-btn:hover .svgIcon { transform: translateY(60%); }
+.view-btn::before { position: absolute; top: -20px; content: "View"; color: white; transition: font-size 0.3s ease-in-out, opacity 0.3s ease-in-out, transform 0.3s ease-in-out; font-size: 2px; opacity: 0; font-family: 'Inter', sans-serif; }
+.view-btn:hover::before { font-size: 13px; opacity: 1; transform: translateY(30px); }
+
+.edit-btn { position: relative; display: flex; align-items: center; justify-content: flex-start; width: 85px; height: 40px; border: none; padding: 0px 16px; background-color: #a855f7; color: white; font-weight: 600; cursor: pointer; border-radius: 10px; box-shadow: 4px 4px 0px #7e22ce; transition-duration: .3s; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 13px; }
+.edit-btn .svg { width: 14px; position: absolute; right: 0; margin-right: 16px; fill: white; transition-duration: .3s; }
+.edit-text { transition-duration: .3s; }
+.edit-btn:hover .edit-text { color: transparent; }
+.edit-btn:hover .svg { right: 40%; margin: 0; padding: 0; transition-duration: .3s; transform: scale(1.3); }
+.edit-btn:active { transform: translate(3px, 3px); transition-duration: .3s; box-shadow: 1px 1px 0px #7e22ce; }
+
+.del-btn { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(to bottom right, #ff1744, #d50000); border: none; font-weight: 600; display: flex; align-items: center; justify-content: center; box-shadow: 0px 0px 15px rgba(255, 23, 68, 0.4); cursor: pointer; transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, border-radius 0.3s ease-in-out; overflow: hidden; position: relative; }
+.del-btn .svgIcon { width: 14px; transition: transform 0.3s ease-in-out; fill: white; }
+.del-btn:hover { width: 100px; border-radius: 50px; transform: scale(1.05); box-shadow: 0px 0px 25px rgba(255, 23, 68, 0.6); }
+.del-btn:hover .svgIcon { transform: translateY(60%); }
+.del-btn::before { position: absolute; top: -20px; content: "Delete"; color: white; transition: font-size 0.3s ease-in-out, opacity 0.3s ease-in-out, transform 0.3s ease-in-out; font-size: 2px; opacity: 0; font-family: 'Inter', sans-serif; }
+.del-btn:hover::before { font-size: 13px; opacity: 1; transform: translateY(30px); }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/manage.js"></script>
+{% endblock %}

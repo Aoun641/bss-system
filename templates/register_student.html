@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Register Student{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div style="margin-bottom: 20px;">
+        <a href="/dashboard" class="btn-neon btn-sm" style="background: #334155; color: #fff; border: none;">← Back</a>
+    </div>
+
+    <div class="glass-card" style="max-width: 900px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 30px;">
+        <!-- Left Form -->
+        <div style="flex: 1; min-width: 300px;">
+            <h2 class="page-title" style="color: #00e5ff; margin-bottom: 20px;">➕ Register Student</h2>
+            <form id="regForm">
+                <div class="form-group"><label style="color:#00e5ff;">Full Name *</label><input type="text" id="full_name" required class="neon-input"></div>
+                <div class="form-group"><label style="color:#00e5ff;">Father Name *</label><input type="text" id="father_name" required class="neon-input"></div>
+                <div class="form-group"><label style="color:#00e5ff;">GR Number *</label><input type="text" id="gr_number" required class="neon-input"></div>
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex:1;"><label style="color:#00e5ff;">Class *</label>
+                        <select id="class_name" class="neon-input">{% for c in classes %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select>
+                    </div>
+                    <div class="form-group" style="flex:1;"><label style="color:#00e5ff;">Section *</label>
+                        <select id="section" class="neon-input">{% for sec in sections %}<option value="{{ sec }}">{{ sec }}</option>{% endfor %}</select>
+                    </div>
+                </div>
+                <div class="form-group"><label style="color:#00e5ff;">Phone (Optional)</label><input type="text" id="phone" class="neon-input" placeholder="e.g. 03001234567"></div>
+                
+                <div id="statusMsg" style="margin: 15px 0; font-weight: bold; font-size: 14px;"></div>
+                <button type="submit" class="btn-neon btn-cyan-glow" style="width: 100%; padding: 12px; font-size: 16px;" id="submitBtn" disabled>Capture Photos First</button>
+            </form>
+        </div>
+
+        <!-- Right Camera -->
+        <div style="flex: 1; min-width: 300px; display: flex; flex-direction: column; align-items: center;">
+            <p style="color: #94a3b8; font-size: 13px; text-align: center; margin-bottom: 10px;">Please look Straight, Left, and Right.</p>
+            <div style="width: 100%; aspect-ratio: 4/3; background: #000; border: 2px solid #00e5ff; border-radius: 12px; overflow: hidden; position: relative;">
+                <video id="video" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>
+            </div>
+            <button type="button" class="btn-neon btn-sm" style="margin-top: 15px; width: 100%;" onclick="capturePhoto()" id="captureBtn">📸 Capture Photo (0/3)</button>
+            
+            <div id="photoPreviews" style="display: flex; gap: 10px; margin-top: 15px; width: 100%; justify-content: center;"></div>
+        </div>
+    </div>
+</div>
+<canvas id="canvas" style="display:none;"></canvas>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let capturedImages = [];
+
+navigator.mediaDevices.getUserMedia({ video: true }).then(stream => { video.srcObject = stream; }).catch(err => { alert("Camera error."); });
+
+function capturePhoto() {
+    if (capturedImages.length >= 3) return;
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+    capturedImages.push(dataUrl);
+    
+    const img = document.createElement('img');
+    img.src = dataUrl;
+    img.style.width = '60px'; img.style.height = '60px'; img.style.borderRadius = '8px'; img.style.border = '2px solid #00ff88'; img.style.objectFit = 'cover';
+    document.getElementById('photoPreviews').appendChild(img);
+    
+    document.getElementById('captureBtn').innerText = `📸 Capture Photo (${capturedImages.length}/3)`;
+    
+    if (capturedImages.length === 3) {
+        document.getElementById('captureBtn').disabled = true;
+        document.getElementById('captureBtn').style.opacity = '0.5';
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = false;
+        submitBtn.innerText = "💾 Register Student";
+    }
+}
+
+document.getElementById('regForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('statusMsg');
+    const btn = document.getElementById('submitBtn');
+    
+    if (capturedImages.length < 3) { msg.style.color = '#ff3366'; msg.innerText = 'Capture 3 photos first!'; return; }
+    
+    btn.disabled = true; msg.style.color = '#00e5ff'; msg.innerText = '⏳ Processing...';
+    
+    const payload = {
+        full_name: document.getElementById('full_name').value, father_name: document.getElementById('father_name').value,
+        gr_number: document.getElementById('gr_number').value, class_name: document.getElementById('class_name').value,
+        section: document.getElementById('section').value, phone: document.getElementById('phone').value,
+        images: capturedImages
+    };
+
+    try {
+        const r = await fetch('/register-student', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) });
+        const data = await r.json();
+        if (data.success) {
+            msg.style.color = '#00ff88'; msg.innerText = '✅ Successfully Registered!';
+            setTimeout(() => window.location.href = '/students', 1500);
+        } else {
+            msg.style.color = '#ff3366'; msg.innerText = '❌ ' + data.error; btn.disabled = false;
+        }
+    } catch(err) { msg.style.color = '#ff3366'; msg.innerText = 'Server Error.'; btn.disabled = false; }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}How to Use BSS{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header" style="margin-bottom: 25px; text-align: center;">
+        <h2 class="page-title" style="font-size: 32px;">📖 BSS v2.0 User Guide</h2>
+        <p style="color: #94a3b8; max-width: 650px; margin: 10px auto 0; line-height: 1.6;">Read the complete guide in English, Urdu, or Sindhi. Use the English Voice Reader to listen.</p>
+    </div>
+
+    <!-- VOICE CONTROL BAR -->
+    <div class="glass-card" style="padding: 18px 22px; margin-bottom: 35px; display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: space-between;">
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <span style="color: #00e5ff; font-weight: 600;">🌐 Display Language:</span>
+            <select id="langSelect" class="neon-input" style="width: 150px; padding: 8px 12px; font-weight: bold;">
+                <option value="en">English</option>
+                <option value="ur">اردو (Urdu)</option>
+                <option value="sd">سنڌي (Sindhi)</option>
+            </select>
+            <span style="color: #38bdf8; font-weight: 600; margin-left: 10px;">🎙️ English Voice Reader:</span>
+            <button onclick="speakGuide()" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #00e5ff, #0284c7);">▶️ Play</button>
+            <button onclick="pauseGuide()" class="btn-neon btn-sm" style="background: #f59e0b;">⏸️ Pause</button>
+            <button onclick="stopGuide()" class="btn-neon btn-sm" style="background: #ef4444;">⏹️ Stop</button>
+        </div>
+    </div>
+
+    <div class="guide-grid" id="guideContent">
+        <!-- 1. Registration -->
+        <div class="uiverse-card">
+            <h3 style="color:#00e5ff; margin-bottom: 15px; border-bottom: 1px solid rgba(0,229,255,0.3); padding-bottom: 10px; font-size: 20px;">➕ 1. How to Register</h3>
+            <div class="en-text"><p><strong>Step 1:</strong> Go to Dashboard and click “Register Student” or “Register Teacher”.</p><p><strong>Step 2:</strong> Fill Name, Father Name, GR Number / Employee ID, Class and Phone carefully.</p><p><strong>Step 3:</strong> Capture 3 clear photos — look straight, slightly left, and slightly right. Good lighting is very important.</p><p class="highlight-text">Result: Face is saved permanently in the database.</p></div>
+            <div class="ur-text" style="display:none; direction: rtl; text-align: right; line-height: 2;"><p><strong>مرحلہ ۱:</strong> ڈیش بورڈ پر جائیں اور “Register Student” یا “Register Teacher” پر کلک کریں۔</p><p><strong>مرحلہ ۲:</strong> نام، والد کا نام، جی آر نمبر / ایمپلائی آئی ڈی، کلاس اور فون نمبر احتیاط سے بھریں۔</p><p><strong>مرحلہ ۳:</strong> تین واضح تصاویر لیں — سیدھا دیکھیں، تھوڑا بائیں اور تھوڑا دائیں۔ روشنی اچھی ہونی چاہیے۔</p><p class="highlight-text">نتیجہ: چہرہ مستقل طور پر ڈیٹا بیس میں محفوظ ہو جاتا ہے۔</p></div>
+            <div class="sd-text" style="display:none; direction: rtl; text-align: right; line-height: 2;"><p><strong>قدم ۱:</strong> ڊيش بورڊ تي وڃو ۽ “Register Student” يا “Register Teacher” تي ڪلڪ ڪريو.</p><p><strong>قدم ۲:</strong> نالو، والد جو نالو، جي آر نمبر / ايمپلائي آئي ڊي، ڪلاس ۽ فون نمبر ڌيان سان بڻيو.</p><p><strong>قدم ۳:</strong> ٽي واضح تصويرون ڪڍو — سڌو ڏسو، ٿورو بائیں ۽ ٿورو دائیں. سٺي روشني تمام ضروري آهي.</p><p class="highlight-text">نتيجو: چهروايمي تصويرون ڊيٽابيس ۾ قائمي طور تي محفوظ ٿي وينديون.</p></div>
+        </div>
+
+        <!-- 2. Scanning -->
+        <div class="uiverse-card">
+            <h3 style="color:#00ff88; margin-bottom: 15px; border-bottom: 1px solid rgba(0,255,136,0.3); padding-bottom: 10px; font-size: 20px;">📱 2. Daily Face Scanning</h3>
+            <div class="en-text"><p><strong>Scanning:</strong> Open Student Scanner or Teacher Scanner on the iPad. Person just looks at the camera. System marks Present or Late automatically.</p><p><strong>Anti-Spoofing:</strong> Do not show mobile photos. The system has strong Liveness Detection and will block fake faces.</p><p class="highlight-text">Teacher Checkout: First scan = Check-in. Second scan later = Checkout + Duty Hours calculation.</p></div>
+            <div class="ur-text" style="display:none; direction: rtl; text-align: right; line-height: 2;"><p><strong>اسکیننگ:</strong> آئی پیڈ پر Student Scanner یا Teacher Scanner کھولیں۔ شخص صرف کیمرے کی طرف دیکھے۔ سسٹم خود Present یا Late مارک کر دے گا۔</p><p><strong>اینٹی اسپوفنگ:</strong> موبائل کی تصویر نہ دکھائیں۔ سسٹم میں مضبوط Liveness Detection ہے جو جعلی چہروں کو بلاک کر دیتی ہے۔</p><p class="highlight-text">ٹیچر چیک آؤٹ: پہلی اسکین = چیک اِن۔ بعد میں دوسری اسکین = چیک آؤٹ + ڈیوٹی آورز کا حساب۔</p></div>
+            <div class="sd-text" style="display:none; direction: rtl; text-align: right; line-height: 2;"><p><strong>اسڪيننگ:</strong> آئي پيڊ تي Student Scanner يا Teacher Scanner کوليو. شخص صرف ڪئميرا ڏانهن ڏسندو. سسٽم خودبخود Present يا Late مارڪ ڪندو.</p><p><strong>اينٽي اسپوفنگ:</strong> موبائل جي تصوير نہ ڏيکاريو. سسٽم ۾ مضبوط Liveness Detection آهي جيڪا ٻيون تصويرون بلاڪ ڪري ٿي.</p><p class="highlight-text">ٽيچر چيڪ آئوٽ: پهريون اسڪين = چيڪ اِن. بعد ۾ ٻيو اسڪين = چيڪ آئوٽ ۽ ڊيوٽي ڪلاڪن جو حساب۔</p></div>
+        </div>
+
+        <!-- 3. Managing Records -->
+        <div class="uiverse-card">
+            <h3 style="color:#facc15; margin-bottom: 15px; border-bottom: 1px solid rgba(250,204,21,0.3); padding-bottom: 10px; font-size: 20px;">👨‍🎓 3. Managing Records</h3>
+            <div class="en-text"><p><strong>View Photo:</strong> Go to Students or Teachers page → click 👁️ View to see the real registered face.</p><p><strong>Edit Details:</strong> Click ✏️ Edit to change name, phone, class or section.</p><p class="highlight-text">Delete: 🗑️ Delete button disables the person but keeps history safe.</p></div>
+            <div class="ur-text" style="display:none; direction: rtl; text-align: right; line-height: 2;"><p><strong>تصویر دیکھیں:</strong> Students یا Teachers صفحے پر جائیں → 👁️ View پر کلک کریں تاکہ اصلی رجسٹرڈ چہرہ نظر آئے۔</p><p><strong>تفصیلات تبدیل کریں:</strong> ✏️ Edit پر کلک کر کے نام، فون، کلاس یا سیکشن تبدیل کر سکتے ہیں۔</p><p class="highlight-text">حذف کریں: 🗑️ Delete بٹن شخص کو غیر فعال کر دیتا ہے لیکن تاریخ محفوظ رہتی ہے۔</p></div>
+            <div class="sd-text" style="display:none; direction: rtl; text-align: right; line-height: 2;"><p><strong>تصوير ڏسو:</strong> Students يا Teachers واري پيج تي وڃو → 👁️ View تي ڪلڪ ڪريو تاڪو اصل رجسٽرڊ چهروايمي تصوير نظر اچي.</p><p><strong>تفصيل تبديل ڪريو:</strong> ✏️ Edit تي ڪلڪ ڪري نالو، فون، ڪلاس يا سيڪشن تبديل ڪري سگهو ٿا.</p><p class="highlight-text">ختم ڪريو: 🗑️ Delete بٽڻ شخص کي غير فعال ڪري ٿو پر هسٽري محفوظ رهي ٿي.</p></div>
+        </div>
+
+        <!-- 4. Alerts -->
+        <div class="uiverse-card">
+            <h3 style="color:#ff3366; margin-bottom: 15px; border-bottom: 1px solid rgba(255,51,102,0.3); padding-bottom: 10px; font-size: 20px;">⚠️ 4. Alerts & Auto Messages</h3>
+            <div class="en-text"><p><strong>Absent Teachers:</strong> Absent teachers appear on Dashboard. Click “Send Absence Message” to send a respectful WhatsApp message automatically.</p><p><strong>Send to Principal:</strong> Write reason in the box and click “Send Reason to Principal”. It goes directly to Principal’s WhatsApp.</p><p class="highlight-text">Absent Students: Continuous absent students appear on Dashboard. Click “WhatsApp Parent” to alert parents.</p></div>
+            <div class="ur-text" style="display:none; direction: rtl; text-align: right; line-height: 2;"><p><strong>غیر حاضر اساتذہ:</strong> غیر حاضر اساتذہ ڈیش بورڈ پر نظر آتے ہیں۔ “Send Absence Message” پر کلک کریں تو احترام سے بھرپور واٹس ایپ میسج خودبخود چلا جائے گا۔</p><p><strong>پرنسپل کو بھیجیں:</strong> وجہ لکھیں اور “Send Reason to Principal” دبائیں۔ میسج براہ راست پرنسپل کے واٹس ایپ پر چلا جاتا ہے۔</p><p class="highlight-text">غیر حاضر طلباء: مسلسل غیر حاضر طلباء ڈیش بورڈ پر نظر آتے ہیں۔ ان کے والدین کو الرٹ کرنے کے لیے “WhatsApp Parent” پر کلک کریں۔</p></div>
+            <div class="sd-text" style="display:none; direction: rtl; text-align: right; line-height: 2;"><p><strong>غير حاضر استاد:</strong> غير حاضر استاد ڊيش بورڊ تي نظر ايندا. “Send Absence Message” تي ڪلڪ ڪريو ته احترام سان واٽس اپ ميسيج هليو ويندو.</p><p><strong>پرنسپال ڏانهن موڪليو:</strong> سبب لکو ۽ “Send Reason to Principal” دٻايو. ميسيج سڌو پرنسپال جي واٽس اپ تي هليو ويندو.</p><p class="highlight-text">غير حاضر شاگرد: مسلسل غير حاضر شاگرد ڊيش بورڊ تي نظر ايندا. والدين کي الرٽ ڪرڻ لاءِ “WhatsApp Parent” تي ڪلڪ ڪريو.</p></div>
+        </div>
+
+        <!-- 5. Settings -->
+        <div class="uiverse-card" style="grid-column: 1 / -1;">
+            <h3 style="color:#c084fc; margin-bottom: 15px; border-bottom: 1px solid rgba(192,132,252,0.3); padding-bottom: 10px; font-size: 20px;">⚙️ 5. Admin Settings & Security</h3>
+            <div class="en-text"><p><strong>Timings:</strong> Principal can change Late cutoff, Half-day and Full-day timings from Settings page.</p><p><strong>Device Limit:</strong> System remembers trusted devices. You can remove old devices from Settings.</p><p><strong>Clear Data:</strong> Red “Clear Data” buttons require the secure Admin Password to prevent accidental deletion.</p><p class="highlight-text">Backup: Always take Database Backup from Settings before major changes.</p></div>
+            <div class="ur-text" style="display:none; direction: rtl; text-align: right; line-height: 2;"><p><strong>ٹائمنگز:</strong> پرنسپل Settings صفحے سے لیٹ کٹ آف، ہاف ڈے اور فل ڈے کی ٹائمنگ تبدیل کر سکتے ہیں۔</p><p><strong>ڈیوائس لمٹ:</strong> سسٹم قابل اعتماد ڈیوائسز یاد رکھتا ہے۔ پرانی ڈیوائسز Settings سے ہٹا سکتے ہیں۔</p><p><strong>ڈیٹا صاف کریں:</strong> حادثاتی ڈیلیشن سے بچنے کے لیے سرخ “Clear Data” بٹنز کے لیے محفوظ ایڈمن پاس ورڈ درکار ہوتا ہے۔</p><p class="highlight-text">بیک اپ: بڑی تبدیلیوں سے پہلے ہمیشہ Settings سے Database Backup لے لیں۔</p></div>
+            <div class="sd-text" style="display:none; direction: rtl; text-align: right; line-height: 2;"><p><strong>ٽائمنگ:</strong> پرنسپال Settings پيج تان ليٽ ڪٽ آف، هاف ڊي ۽ فل ڊي جي ٽائمنگ تبديل ڪري سگهي ٿو.</p><p><strong>ڊيوائس لمٽ:</strong> سسٽم بااعتماد ڊيوائسز ياد رکي ٿو. پراڻيون ڊيوائسز Settings تان هٽائي سگهو ٿا.</p><p><strong>ڊيٽا صاف ڪريو:</strong> حادثاتي ڊيليشن کان بچڻ لاءِ سرخ “Clear Data” بٽڻن لاءِ محفوظ ايڊمن پاس ورڊ گهربل آهي.</p><p class="highlight-text">بئڪ اپ: وڏين تبديلين کان اڳ هميشه Settings تان Database Backup وٺو.</p></div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+.guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 25px; }
+.uiverse-card { position: relative; background-color: #0b1329; display: flex; flex-direction: column; justify-content: flex-start; padding: 24px; gap: 12px; border-radius: 14px; color: white; z-index: 1; border: 1px solid rgba(255, 255, 255, 0.08); }
+.uiverse-card::before { content: ''; position: absolute; inset: -2px; border-radius: 16px; background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%); z-index: -2; pointer-events: none; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0.7; }
+.uiverse-card::after { content: ""; z-index: -1; position: absolute; inset: 0; border-radius: 14px; background: linear-gradient(-45deg, #fc00ff 0%, #00dbde 100%); transform: translate3d(0, 0, 0) scale(0.98); filter: blur(18px); opacity: 0.5; transition: filter 0.6s ease, opacity 0.6s ease; }
+.uiverse-card:hover::after { filter: blur(28px); opacity: 0.85; }
+.uiverse-card:hover::before { transform: scale(1.015); opacity: 1; }
+.uiverse-card p { margin-bottom: 10px; line-height: 1.7; color: #cbd5e1; font-size: 14px; }
+.uiverse-card .highlight-text { color: #e81cff; font-weight: 600; margin-top: 12px; }
+.ur-text p, .sd-text p { font-size: 16px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentUtterance = null;
+let isPaused = false;
+document.getElementById('langSelect').addEventListener('change', function() {
+    const lang = this.value;
+    document.querySelectorAll('.en-text').forEach(el => el.style.display = lang === 'en' ? 'block' : 'none');
+    document.querySelectorAll('.ur-text').forEach(el => el.style.display = lang === 'ur' ? 'block' : 'none');
+    document.querySelectorAll('.sd-text').forEach(el => el.style.display = lang === 'sd' ? 'block' : 'none');
+    stopGuide();
+});
+
+function getEnglishGuideText() {
+    return `Welcome to BSS version 2.0 User Guide. Section 1: How to Register. Step 1: Go to Dashboard and click Register Student or Register Teacher. Step 2: Fill Name, Father Name, GR Number or Employee ID, Class and Phone carefully. Step 3: Capture 3 clear photos. Look straight, slightly left, and slightly right. Good lighting is very important. Result: Face is saved permanently in the database. Section 2: Daily Face Scanning. Open Student Scanner or Teacher Scanner on the iPad. Person just looks at the camera. System marks Present or Late automatically. Do not show mobile photos. The system has strong Liveness Detection and will block fake faces. For teachers: First scan is Check-in. Second scan later is Checkout and calculates Duty Hours. Section 3: Managing Records. Go to Students or Teachers page. Click View to see the real registered face. Click Edit to change name, phone, class or section. Delete button disables the person but keeps history safe. Section 4: Alerts and Auto Messages. Absent teachers appear on Dashboard. Click Send Absence Message to send a respectful WhatsApp message automatically. Write reason in the box and click Send Reason to Principal. It goes directly to Principal’s WhatsApp. Continuous absent students also appear on the Dashboard. Click WhatsApp Parent to instantly alert their parents. Section 5: Admin Settings and Security. Principal can change Late cutoff, Half-day and Full-day timings from Settings page. System remembers trusted devices. You can remove old devices from Settings. Red Clear Data buttons require the secure Admin Password to prevent accidental deletion. Always take Database Backup from Settings before major changes. Thank you for using BSS Banbhan Scan System.`;
+}
+
+function speakGuide() {
+    if (!('speechSynthesis' in window)) { alert("Sorry, your browser does not support voice reading."); return; }
+    stopGuide();
+    const text = getEnglishGuideText();
+    currentUtterance = new SpeechSynthesisUtterance(text);
+    currentUtterance.lang = 'en-US'; currentUtterance.rate = 0.92; currentUtterance.pitch = 1;
+    speechSynthesis.speak(currentUtterance);
+    isPaused = false;
+}
+function pauseGuide() {
+    if (speechSynthesis.speaking) {
+        if (isPaused) { speechSynthesis.resume(); isPaused = false; } else { speechSynthesis.pause(); isPaused = true; }
+    }
+}
+function stopGuide() {
+    if (speechSynthesis.speaking || speechSynthesis.pending) { speechSynthesis.cancel(); }
+    isPaused = false;
+}
+window.speechSynthesis.onvoiceschanged = function() { speechSynthesis.getVoices(); };
+</script>
+{% endblock %}

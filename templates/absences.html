@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Absence Records{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <h2 class="page-title">📅 Teacher Absences</h2>
+        <a href="/api/download-absences" class="btn-neon btn-sm btn-green" style="text-decoration:none;">📥 Download Excel</a>
+    </div>
+
+    <div class="glass-card" style="overflow-x:auto;">
+        <div class="table-wrap">
+            <table class="data-table" style="min-width:600px;">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Day</th>
+                        <th>Teacher Name</th>
+                        <th>Reason Submitted</th>
+                        <th>Time Logged</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in records %}
+                    <tr>
+                        <td style="color:#00e5ff; font-weight:bold;">{{ r['date'] }}</td>
+                        <td>{{ r['day_name'] }}</td>
+                        <td style="font-weight:bold;">{{ r['teacher_name'] }}</td>
+                        <td>{{ r['reason'] }}</td>
+                        <td style="font-size:12px; color:#cbd5e1;">{{ r['timestamp'] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align:center; padding:30px; color:#94a3b8;">
+                            📭 No absence records yet.<br>
+                            <small>When a teacher is marked absent and their reason is sent to the Principal, it will automatically save here.</small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

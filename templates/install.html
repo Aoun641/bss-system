@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Install App{% endblock %}
+
+{% block content %}
+<div class="page-container" style="max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 40px; align-items: center;">
+    <div style="flex: 1; min-width: 320px;">
+        <h2 class="page-title" style="font-size: 32px; color: #00e5ff; margin-bottom: 20px;">📲 Install BSS System</h2>
+        <p style="color: #94a3b8; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">For the best, fastest, and most secure scanning experience, install the BSS System directly to your home screen!</p>
+        <div class="glass-card" style="margin-bottom: 15px; padding: 20px; border-left: 4px solid #00e5ff;">
+            <h3 style="color: #fff; margin: 0 0 8px;">💻 On Laptop / PC (Chrome)</h3>
+            <p style="color: #cbd5e1; margin: 0; font-size: 14px;">Look at the very top of your browser address bar. Click the <strong style="color: #00ff88;">Install Icon 🖥️⬇️</strong> next to the bookmark star.</p>
+        </div>
+        <div class="glass-card" style="margin-bottom: 15px; padding: 20px; border-left: 4px solid #c084fc;">
+            <h3 style="color: #fff; margin: 0 0 8px;">📱 On Android (Chrome)</h3>
+            <p style="color: #cbd5e1; margin: 0; font-size: 14px; line-height: 1.6;">1. Tap the <strong>3 dots ( ⋮ )</strong> at the top right.<br>2. Scroll down and click <strong style="color: #c084fc;">"Cast, save and share"</strong>.<br>3. Click <strong style="color: #c084fc;">"Install BSS v2.0"</strong>.</p>
+        </div>
+        <div class="glass-card" style="padding: 20px; border-left: 4px solid #ff3366;">
+            <h3 style="color: #fff; margin: 0 0 8px;">🍏 On iPad / iPhone (Safari)</h3>
+            <p style="color: #cbd5e1; margin: 0; font-size: 14px; line-height: 1.6;">1. Tap the <strong>Share Icon</strong> at the bottom/top of Safari.<br>2. Scroll down and tap <strong style="color: #ff3366;">"Add to Home Screen"</strong>.<br>3. Tap <strong>Add</strong>.</p>
+        </div>
+    </div>
+    <div style="flex: 1; display: flex; justify-content: center; align-items: center; min-width: 320px;">
+        <div class="ipad-mockup">
+            <div class="mockup-camera"></div>
+            <div class="mockup-screen">
+                <div class="mockup-logo"><img src="/static/images/icon-192.png?v=3" alt="BSS"></div>
+                <div class="mockup-scanner">
+                    <img src="/static/images/icon-192.png?v=3" alt="Face" class="mockup-face">
+                    <div class="mockup-laser"></div><div class="hud tl"></div><div class="hud tr"></div><div class="hud bl"></div><div class="hud br"></div>
+                </div>
+                <div class="mockup-text-success">SUCCESSFULLY SCANNED! ✓</div>
+                <div class="mockup-brand">BSS SYSTEM 2026</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.ipad-mockup { width: 320px; height: 480px; border: 14px solid #1e293b; border-radius: 28px; background: #030712; position: relative; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 0 2px #334155, 0 0 30px rgba(0, 229, 255, 0.2); transform: rotate(2deg); transition: transform 0.4s ease; }
+.ipad-mockup:hover { transform: rotate(0deg) scale(1.05); }
+.mockup-camera { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: #000; border-radius: 50%; box-shadow: inset 0 1px 2px rgba(255,255,255,0.2); z-index: 10; }
+.mockup-screen { padding: 40px 20px; text-align: center; height: 100%; display: flex; flex-direction: column; align-items: center; background: radial-gradient(circle at 50% 50%, #0a1128 0%, #030712 100%); }
+.mockup-logo img { width: 40px; border-radius: 8px; margin-bottom: 30px; }
+.mockup-scanner { position: relative; width: 140px; height: 140px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
+.mockup-face { width: 100px; height: 100px; object-fit: contain; filter: drop-shadow(0 0 10px #00e5ff); animation: pulseMockup 2s infinite alternate; }
+.mockup-laser { position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: #00ff88; box-shadow: 0 0 15px #00ff88, 0 0 30px #00e5ff; animation: scanMockup 2.5s infinite ease-in-out; }
+.hud { position: absolute; width: 15px; height: 15px; border-color: #00e5ff; border-style: solid; }
+.tl { top: -5px; left: -5px; border-width: 2px 0 0 2px; }
+.tr { top: -5px; right: -5px; border-width: 2px 2px 0 0; }
+.bl { bottom: -5px; left: -5px; border-width: 0 0 2px 2px; }
+.br { bottom: -5px; right: -5px; border-width: 0 2px 2px 0; }
+.mockup-text-success { color: #00ff88; font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: bold; margin-top: 10px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(0, 255, 136, 0.6); animation: flashSuccess 2.5s infinite; }
+.mockup-brand { color: #4f6378; font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 900; margin-top: auto; letter-spacing: 2px; }
+@keyframes scanMockup { 0% { top: 0%; opacity: 1; } 45% { top: 100%; opacity: 1; } 50% { opacity: 0; } 100% { top: 0%; opacity: 0; } }
+@keyframes pulseMockup { 0% { filter: drop-shadow(0 0 5px #00e5ff); } 100% { filter: drop-shadow(0 0 20px #00e5ff) brightness(1.2); } }
+@keyframes flashSuccess { 0%, 45% { opacity: 0; transform: scale(0.9); } 50%, 80% { opacity: 1; transform: scale(1.1); } 100% { opacity: 0; transform: scale(1); } }
+</style>
+{% endblock %}

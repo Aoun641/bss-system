@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}View Student Face{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div style="margin-bottom: 20px;">
+        <a href="/students" class="btn-neon btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+            ← Back to Students
+        </a>
+    </div>
+
+    <div class="glass-card" style="max-width: 500px; margin: 0 auto; text-align: center; padding: 30px;">
+        <h2 class="page-title" style="margin-bottom: 6px;">👁️ Student Face Profile</h2>
+        <p style="color:#94a3b8; font-size:13px; margin-bottom: 20px;">Registered face photo and student information</p>
+
+        <!-- DYNAMIC GUARANTEED PHOTO -->
+        <img src="/student/{{ student['id'] }}/photo"
+             onerror="this.src='/static/images/icon-192.png'"
+             alt="{{ student['full_name'] }}"
+             style="width: 240px; height: 240px; object-fit: cover; border-radius: 18px; border: 3px solid #00e5ff; box-shadow: 0 0 25px rgba(0,229,255,0.4); background:#0f172a; margin-bottom: 20px;">
+
+        <!-- DETAILS -->
+        <div style="text-align: left; background: rgba(15,23,42,0.6); padding: 18px; border-radius: 12px; border: 1px solid rgba(0,229,255,0.2); color:#e2e8f0; line-height: 2;">
+            <div><strong style="color:#00e5ff;">Full Name:</strong> {{ student['full_name'] }}</div>
+            <div><strong style="color:#00e5ff;">Father Name:</strong> {{ student['father_name'] }}</div>
+            <div><strong style="color:#00e5ff;">GR Number:</strong> {{ student['gr_number'] }}</div>
+            <div><strong style="color:#00e5ff;">Class & Section:</strong> {{ student['class_name'] }} - {{ student['section'] }}</div>
+            <div><strong style="color:#00e5ff;">Phone:</strong> {{ student['phone'] or 'N/A' }}</div>
+        </div>
+
+        <div style="margin-top: 22px; display: flex; gap: 10px; justify-content: center;">
+            <a href="/student/{{ student['id'] }}/edit" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #facc15, #b45309); color: black;">✏️ Edit Details</a>
+            <a href="/students" class="btn-neon btn-sm" style="background: #334155; color: white; border: none;">← Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Edit Student{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div style="margin-bottom: 20px;">
+        <a href="/students" class="btn-neon btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+            ← Back to Students
+        </a>
+    </div>
+
+    <div class="glass-card" style="max-width: 550px; margin: 0 auto; padding: 30px;">
+        <h2 class="page-title" style="margin-bottom: 6px;">✏️ Edit Student Details</h2>
+        <p style="color:#94a3b8; font-size:13px; margin-bottom: 20px;">Update student information in database</p>
+
+        <form id="editStudentForm">
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="color:#00e5ff; display:block; margin-bottom:5px;">Full Name *</label>
+                <input type="text" id="full_name" value="{{ student['full_name'] }}" required class="neon-input">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="color:#00e5ff; display:block; margin-bottom:5px;">Father Name *</label>
+                <input type="text" id="father_name" value="{{ student['father_name'] }}" required class="neon-input">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="color:#00e5ff; display:block; margin-bottom:5px;">GR Number *</label>
+                <input type="text" id="gr_number" value="{{ student['gr_number'] }}" required class="neon-input">
+            </div>
+
+            <div class="form-row" style="display:flex; gap:15px; margin-bottom: 15px;">
+                <div style="flex:1;">
+                    <label style="color:#00e5ff; display:block; margin-bottom:5px;">Class *</label>
+                    <select id="class_name" class="neon-input">
+                        {% for c in classes %}
+                        <option value="{{ c }}" {% if student['class_name'] == c %}selected{% endif %}>{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="flex:1;">
+                    <label style="color:#00e5ff; display:block; margin-bottom:5px;">Section *</label>
+                    <select id="section" class="neon-input">
+                        {% for sec in sections %}
+                        <option value="{{ sec }}" {% if student['section'] == sec %}selected{% endif %}>{{ sec }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="color:#00e5ff; display:block; margin-bottom:5px;">Phone Number</label>
+                <input type="text" id="phone" value="{{ student['phone'] or '' }}" class="neon-input">
+            </div>
+
+            <div id="editMsg" style="margin-bottom: 15px; font-size: 13px; font-weight: bold;"></div>
+
+            <div style="display:flex; gap:12px; justify-content:flex-end;">
+                <a href="/students" class="btn-neon btn-sm" style="background:#334155; color:#fff;">Cancel</a>
+                <button type="submit" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #10b981, #047857); color: white;">💾 Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('editStudentForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('editMsg');
+    msg.style.color = '#00e5ff';
+    msg.innerText = '⏳ Saving changes...';
+
+    const payload = {
+        full_name: document.getElementById('full_name').value.trim(),
+        father_name: document.getElementById('father_name').value.trim(),
+        gr_number: document.getElementById('gr_number').value.trim(),
+        class_name: document.getElementById('class_name').value,
+        section: document.getElementById('section').value,
+        phone: document.getElementById('phone').value.trim()
+    };
+
+    try {
+        const response = await fetch('/student/{{ student['id'] }}/edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const res = await response.json();
+        if (res.success) {
+            msg.style.color = '#00ff88';
+            msg.innerText = '✅ Student updated successfully!';
+            setTimeout(() => { window.location.href = '/students'; }, 1000);
+        } else {
+            msg.style.color = '#ff1744';
+            msg.innerText = '❌ ' + (res.error || 'Failed to update student');
+        }
+    } catch(err) {
+        msg.style.color = '#ff1744';
+        msg.innerText = '❌ Server error occurred.';
+    }
+});
+</script>
+{% endblock %}

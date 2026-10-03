@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Activity History{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h2 class="page-title" style="margin-bottom: 20px;">📜 Registration & Deletion History</h2>
+
+    <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="?type=REGISTER" class="btn-neon btn-sm" style="{% if filter_type=='REGISTER' %}background: #00ff88; color: #000;{% else %}background: #1e293b; color: #fff;{% endif %} text-decoration: none;">➕ Registrations</a>
+            <a href="?type=DELETE" class="btn-neon btn-sm" style="{% if filter_type=='DELETE' %}background: #ff3366; color: #fff;{% else %}background: #1e293b; color: #fff;{% endif %} text-decoration: none;">🗑 Deletions</a>
+            <a href="/attendance-history" class="btn-neon btn-sm" style="background: #334155; color: #fff; text-decoration: none;">📅 Attendance History</a>
+        </div>
+    </div>
+
+    <div class="glass-card" style="overflow-x: auto;">
+        <h3 class="section-title">
+            {% if filter_type=='REGISTER' %}➕ Registered Students & Teachers{% else %}🗑 Deleted Students & Teachers{% endif %}
+            ({{ logs|length }})
+        </h3>
+        <div class="table-wrap">
+            <table class="data-table" style="min-width: 800px;">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Day</th>
+                        <th>Time</th>
+                        <th>Type</th>
+                        <th>Details</th>
+                        <th>By User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in logs %}
+                    <tr>
+                        <td style="color:#00e5ff; font-weight:bold;">{{ a['date_only'] }}</td>
+                        <td>{{ a['day_name'] }}</td>
+                        <td>{{ a['time_only'] }}</td>
+                        <td>
+                            <span class="status-badge status-{{ 'present' if a['target_type']=='student' else 'half-day' }}">
+                                {{ a['target_type']|upper }}
+                            </span>
+                        </td>
+                        <td>{{ a['details'] }}</td>
+                        <td style="color:#94a3b8;">{{ a['admin_user'] }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 20px; color: #94a3b8;">No history records found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

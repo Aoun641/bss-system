@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Edit Teacher{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div style="margin-bottom: 20px;">
+        <a href="/teachers" class="btn-neon btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+            ← Back to Teachers
+        </a>
+    </div>
+
+    <div class="glass-card" style="max-width: 550px; margin: 0 auto; padding: 30px;">
+        <h2 class="page-title" style="margin-bottom: 6px;">✏️ Edit Teacher Details</h2>
+        <p style="color:#94a3b8; font-size:13px; margin-bottom: 20px;">Update teacher information in database</p>
+
+        <form id="editTeacherForm">
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="color:#00e5ff; display:block; margin-bottom:5px;">Full Name *</label>
+                <input type="text" id="full_name" value="{{ teacher['full_name'] }}" required class="neon-input">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="color:#00e5ff; display:block; margin-bottom:5px;">Father Name</label>
+                <input type="text" id="father_name" value="{{ teacher['father_name'] or '' }}" class="neon-input">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="color:#00e5ff; display:block; margin-bottom:5px;">Employee ID *</label>
+                <input type="text" id="employee_id" value="{{ teacher['employee_id'] }}" required class="neon-input">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="color:#00e5ff; display:block; margin-bottom:5px;">Designation</label>
+                <input type="text" id="designation" value="{{ teacher['designation'] or '' }}" class="neon-input">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="color:#00e5ff; display:block; margin-bottom:5px;">Phone Number</label>
+                <input type="text" id="phone" value="{{ teacher['phone'] or '' }}" class="neon-input">
+            </div>
+
+            <div id="editMsg" style="margin-bottom: 15px; font-size: 13px; font-weight:bold;"></div>
+
+            <div style="display:flex; gap:12px; justify-content:flex-end;">
+                <a href="/teachers" class="btn-neon btn-sm" style="background:#334155; color:#fff; text-decoration:none;">Cancel</a>
+                <button type="submit" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #10b981, #047857); color: white;">💾 Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('editTeacherForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('editMsg');
+    msg.style.color = '#00e5ff';
+    msg.innerText = '⏳ Saving changes...';
+
+    const payload = {
+        full_name: document.getElementById('full_name').value.trim(),
+        father_name: document.getElementById('father_name').value.trim(),
+        employee_id: document.getElementById('employee_id').value.trim(),
+        designation: document.getElementById('designation').value.trim(),
+        phone: document.getElementById('phone').value.trim()
+    };
+
+    try {
+        const response = await fetch('/teacher/{{ teacher['id'] }}/edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const res = await response.json();
+        if (res.success) {
+            msg.style.color = '#00ff88';
+            msg.innerText = '✅ Teacher updated successfully!';
+            setTimeout(() => { window.location.href = '/teachers'; }, 1000);
+        } else {
+            msg.style.color = '#ff1744';
+            msg.innerText = '❌ ' + (res.error || 'Failed to update teacher');
+        }
+    } catch(err) {
+        msg.style.color = '#ff1744';
+        msg.innerText = '❌ Server error occurred.';
+    }
+});
+</script>
+{% endblock %}

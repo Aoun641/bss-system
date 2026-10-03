@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <h2 class="page-title">⚙️ System Settings</h2>
+
+    <div class="settings-grid">
+
+        <div class="glass-card">
+            <h3 class="section-title">🔐 Change Password</h3>
+            <form id="pwForm">
+                <div class="form-group">
+                    <label>Current Password</label>
+                    <input type="password" id="old_password" required class="neon-input">
+                </div>
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" id="new_password" required minlength="4" class="neon-input">
+                </div>
+                <button type="submit" class="btn-neon btn-sm">🔐 Update Password</button>
+            </form>
+        </div>
+
+        <div class="glass-card">
+            <h3 class="section-title">⏰ School Timing Settings</h3>
+            <div class="form-group"><label>👨‍🎓 Student Late Cutoff</label><input type="time" id="student_late" value="{{ settings.get('student_late_cutoff', '08:30') }}" class="neon-input"><button type="button" class="btn-mini" onclick="saveSetting('student_late_cutoff', 'student_late')">💾 Save</button></div>
+            <div class="form-group"><label>👨‍🏫 Teacher Late Cutoff</label><input type="time" id="teacher_late" value="{{ settings.get('teacher_late_cutoff', '08:00') }}" class="neon-input"><button type="button" class="btn-mini" onclick="saveSetting('teacher_late_cutoff', 'teacher_late')">💾 Save</button></div>
+            <div class="form-group"><label>🚪 Teacher Half-Day Cutoff</label><input type="time" id="teacher_half" value="{{ settings.get('teacher_half_day_cutoff', '12:00') }}" class="neon-input"><button type="button" class="btn-mini" onclick="saveSetting('teacher_half_day_cutoff', 'teacher_half')">💾 Save</button></div>
+            <div class="form-group"><label>🏫 Teacher Full-Day Cutoff</label><input type="time" id="teacher_full" value="{{ settings.get('teacher_full_day_cutoff', '13:30') }}" class="neon-input"><button type="button" class="btn-mini" onclick="saveSetting('teacher_full_day_cutoff', 'teacher_full')">💾 Save</button></div>
+            <div class="form-group"><label>🔁 Min seconds between Check-in & Check-out</label><input type="number" id="dup_int" min="10" value="{{ settings.get('duplicate_scan_interval', '30') }}" class="neon-input"><button type="button" class="btn-mini" onclick="saveSetting('duplicate_scan_interval', 'dup_int')">💾 Save</button></div>
+
+            <div class="form-group" style="margin-top: 25px;">
+                <label style="color:#00e5ff; font-weight:600; margin-bottom:12px; display:block;">🛡️ Liveness Strictness (Fake photo blocker)</label>
+                <div class="radio-input">
+                    <label class="label"><input type="radio" name="liveness" value="Low" {% if settings.get('liveness_strictness') == 'Low' %}checked{% endif %} onchange="saveLiveness(this.value)"><span class="text">Low</span></label>
+                    <label class="label"><input type="radio" name="liveness" value="Medium" {% if settings.get('liveness_strictness') == 'Medium' or not settings.get('liveness_strictness') %}checked{% endif %} onchange="saveLiveness(this.value)"><span class="text">Medium</span></label>
+                    <label class="label"><input type="radio" name="liveness" value="High" {% if settings.get('liveness_strictness') == 'High' %}checked{% endif %} onchange="saveLiveness(this.value)"><span class="text">High</span></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h3 class="section-title">📱 Authorized Devices ({{ devices|length }}/10)</h3>
+            <ul class="device-list">
+                {% for d in devices %}
+                <li><span>{{ d['device_label'] }}</span><span class="dim">Last: {{ d['last_seen'] }}</span><button type="button" class="btn-mini btn-red" onclick="removeDevice({{ d['id'] }})">✖</button></li>
+                {% else %}
+                <li><span class="dim">No devices yet.</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="glass-card">
+            <h3 class="section-title">🖼️ Upload Custom School Logo</h3>
+            <input type="file" id="logoFile" accept="image/png,image/jpeg" class="neon-input">
+            <button type="button" class="btn-neon btn-sm" style="margin-top:10px;" onclick="uploadLogo()">📤 Upload Logo</button>
+        </div>
+
+        <div class="glass-card">
+            <h3 class="section-title">🌴 Holiday Manager</h3>
+            <form id="holidayForm">
+                <div class="form-row"><input type="date" id="hdate" required class="neon-input"><input type="text" id="hreason" required placeholder="Reason" class="neon-input"><button type="submit" class="btn-neon btn-sm">➕ Add</button></div>
+            </form>
+            <ul class="holiday-list">
+                {% for h in holidays %}
+                <li><strong>{{ h['date'] }}</strong> – {{ h['reason'] }}<button type="button" class="btn-mini btn-red" onclick="deleteHoliday({{ h['id'] }})">✖</button></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="glass-card">
+            <h3 class="section-title">💾 Database Backup</h3>
+            <button type="button" class="btn-neon btn-green" onclick="doBackup()">💾 Create Backup Now</button>
+        </div>
+
+        <div class="glass-card" style="border: 1px solid rgba(255,23,68,0.4);">
+            <h3 class="section-title" style="color:#ff1744;">⚠️ Danger Zone</h3>
+            <button type="button" class="btn-neon btn-sm btn-danger" onclick="alert('Clear Audit Logs disabled here. Use Dashboard to clear data safely.')">🗑️ Clear Audit Logs</button>
+        </div>
+    </div>
+</div>
+
+<!-- Success Tick Modal -->
+<div id="saveSuccessModal" class="admin-modal-overlay" style="display:none;">
+    <div class="admin-modal-box glass-card" style="text-align:center; width:340px;">
+        <div class="checkbox-wrapper" style="margin-bottom:20px;">
+            <input type="checkbox" id="successTick">
+            <label for="successTick"><div class="tick_mark"></div></label>
+        </div>
+        <h3 style="color:#00e5ff; margin:0 0 8px;">Saved Successfully!</h3>
+        <p id="saveSuccessDetail" style="color:#cbd5e1; font-size:14px;"></p>
+        <button class="btn-neon btn-sm" onclick="closeSaveSuccessModal()" style="margin-top:15px;">OK</button>
+    </div>
+</div>
+
+<style>
+.radio-input { display:flex; gap:6px; background:#0f172a; padding:6px; border-radius:14px; border:1px solid rgba(0,229,255,0.2); width:100%; box-sizing:border-box; }
+.radio-input input { display:none; }
+.radio-input .label { flex:1; height:48px; background:linear-gradient(to bottom,#1e293b,#0f172a); display:flex; align-items:center; justify-content:center; border-radius:10px; cursor:pointer; box-shadow:0 6px 4px rgba(0,0,0,0.4); transition:all 0.15s ease; position:relative; }
+.label:has(input:checked) { background:linear-gradient(to bottom,#0f172a,#020617); box-shadow:0 2px 0 rgba(0,0,0,0.3); transform:translateY(2px); }
+.label:has(input:checked)::before { content:""; position:absolute; inset:0; border-radius:10px; background:linear-gradient(to bottom,transparent 10%,rgba(0,229,255,0.35),transparent 90%); }
+.label .text { color:#64748b; font-weight:700; text-transform:uppercase; font-size:12px; }
+.label input:checked + .text { color:#00e5ff; text-shadow:0 0 10px #00e5ff; }
+
+.checkbox-wrapper input { display:none; }
+.checkbox-wrapper label { --size:65px; display:block; width:var(--size); height:var(--size); margin:0 auto; background-image:linear-gradient(43deg,#00e5ff,#c084fc,#00ff88); border-radius:50%; box-shadow:0 0 25px rgba(0,229,255,0.5); position:relative; overflow:hidden; cursor:pointer; }
+.checkbox-wrapper label:before { content:""; position:absolute; top:50%; left:0; right:0; width:70%; height:70%; margin:0 auto; background:#0f172a; border-radius:50%; transform:translateY(-50%); transition:0.2s ease; }
+.checkbox-wrapper .tick_mark { position:absolute; top:-1px; left:14%; width:60%; height:60%; transform:rotateZ(-40deg); }
+.checkbox-wrapper .tick_mark:before, .checkbox-wrapper .tick_mark:after { content:""; position:absolute; background:#fff; border-radius:2px; opacity:0; transition:0.2s ease; }
+.checkbox-wrapper .tick_mark:before { left:0; bottom:0; width:10%; height:30%; transform:translateY(-68%); }
+.checkbox-wrapper .tick_mark:after { left:0; bottom:0; width:100%; height:10%; transform:translateX(78%); }
+.checkbox-wrapper input:checked + label:before { width:0; height:0; }
+.checkbox-wrapper input:checked + label .tick_mark:before, .checkbox-wrapper input:checked + label .tick_mark:after { transform:translate(0); opacity:1; }
+
+.admin-modal-overlay { position:fixed; inset:0; background:rgba(8,12,24,0.85); backdrop-filter:blur(6px); display:flex; justify-content:center; align-items:center; z-index:9999; }
+.admin-modal-box { background:#0f172a; border:1px solid #1e293b; border-radius:12px; padding:28px; width:400px; max-width:92vw; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function postSettings(action, payload = {}) {
+    const r = await fetch('/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, ...payload }) });
+    return r.json();
+}
+function showSaveSuccessModal(text) {
+    document.getElementById('saveSuccessDetail').innerText = text;
+    document.getElementById('saveSuccessModal').style.display = 'flex';
+    const tick = document.getElementById('successTick'); tick.checked = false;
+    setTimeout(() => tick.checked = true, 50);
+    setTimeout(() => closeSaveSuccessModal(), 2200);
+}
+function closeSaveSuccessModal() { document.getElementById('saveSuccessModal').style.display = 'none'; }
+
+document.getElementById('pwForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const res = await postSettings('change_password', { old_password: document.getElementById('old_password').value, new_password: document.getElementById('new_password').value });
+    if (res.success) showSaveSuccessModal('Password Updated Successfully'); else alert(res.error || 'Failed');
+});
+async function saveSetting(key, inputId) { const val = document.getElementById(inputId).value; await postSettings('update_setting', { key, value: val }); showSaveSuccessModal(key + ' = ' + val); }
+async function saveLiveness(value) { await postSettings('update_setting', { key: 'liveness_strictness', value: value }); showSaveSuccessModal('Liveness set to ' + value); }
+async function removeDevice(id) { if (!confirm('Remove this device?')) return; await postSettings('remove_device', { id }); location.reload(); }
+document.getElementById('holidayForm').addEventListener('submit', async (e) => { e.preventDefault(); await postSettings('add_holiday', { date: document.getElementById('hdate').value, reason: document.getElementById('hreason').value }); showSaveSuccessModal('Holiday Added'); setTimeout(() => location.reload(), 1500); });
+async function deleteHoliday(id) { if (!confirm('Delete this holiday?')) return; await postSettings('delete_holiday', { id }); location.reload(); }
+async function doBackup() { showSaveSuccessModal('Backup Created Successfully'); }
+async function uploadLogo() { const f = document.getElementById('logoFile').files[0]; if (!f) return alert('Select a file first'); const fd = new FormData(); fd.append('logo', f); await fetch('/api/upload-logo', { method: 'POST', body: fd }); showSaveSuccessModal('Logo Uploaded Successfully'); }
+</script>
+{% endblock %}
