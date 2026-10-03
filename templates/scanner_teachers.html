@@ -4,50 +4,41 @@
 {% block content %}
 <div class="page-container" style="text-align: center; padding-top: 20px;">
     <h2 class="page-title" style="color: #c084fc; font-size: 28px; margin-bottom: 8px;">👨‍🏫 Teacher Scanner</h2>
-    <p style="color: #94a3b8; margin-bottom: 25px;">Position face inside the frame. First scan = Check-in. Second = Checkout.</p>
+    <p style="color: #94a3b8; margin-bottom: 20px;">Tap Start to activate camera and audio.</p>
 
-    <!-- Camera Container with Cyberpunk HUD -->
-    <div style="position: relative; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 3px solid #c084fc; box-shadow: 0 0 40px rgba(192,132,252,0.2); background: #000; aspect-ratio: 4/3;">
-        
+    <!-- Start Button to Unlock Audio -->
+    <button id="startScanBtn" class="btn-neon btn-sm" style="background: linear-gradient(135deg, #c084fc, #9333ea); padding: 12px 30px; font-size: 16px; margin-bottom: 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white;">
+        ▶️ Start Scanner
+    </button>
+
+    <!-- Camera Container -->
+    <div id="cameraWrapper" style="display: none; position: relative; width: 100%; max-width: 600px; margin: 0 auto; border-radius: 20px; overflow: hidden; border: 3px solid #c084fc; box-shadow: 0 0 40px rgba(192,132,252,0.2); background: #000; aspect-ratio: 4/3;">
         <video id="videoFeed" autoplay playsinline muted style="width: 100%; height: 100%; object-fit: cover; display: block;"></video>
         <canvas id="canvas" style="display:none;"></canvas>
 
-        <!-- Sci-Fi Target HUD Overlay -->
         <div class="hud hud-tl"></div><div class="hud hud-tr"></div>
         <div class="hud hud-bl"></div><div class="hud hud-br"></div>
         <div class="laser-line"></div>
     </div>
 
     <!-- Live Results Box -->
-    <div id="resultBox" class="glass-card" style="margin: 25px auto 0; max-width: 600px; padding: 18px; border-radius: 12px; font-size: 18px; font-weight: bold; color: #fff; min-height: 60px; display: flex; align-items: center; justify-content: center;">
+    <div id="resultBox" class="glass-card" style="display: none; margin: 25px auto 0; max-width: 600px; padding: 18px; border-radius: 12px; font-size: 18px; font-weight: bold; color: #fff; min-height: 60px; align-items: center; justify-content: center;">
         <span style="color: #94a3b8; animation: pulseText 1.5s infinite;">Scanning surroundings...</span>
     </div>
 
     <div style="margin-top: 25px;">
-        <a href="/dashboard" class="btn-neon btn-sm" style="background: #334155; color: #fff; border: none; padding: 10px 20px;">← Back to Dashboard</a>
+        <a href="/dashboard" class="btn-neon btn-sm" style="background: #334155; color: #fff; border: none; padding: 10px 20px; text-decoration: none;">← Back to Dashboard</a>
     </div>
 </div>
 
 <style>
-/* Sci-Fi Scanner HUD Animations */
 .hud { position: absolute; width: 40px; height: 40px; border-color: #c084fc; border-style: solid; z-index: 10; opacity: 0.8; }
 .hud-tl { top: 20px; left: 20px; border-width: 4px 0 0 4px; border-top-left-radius: 10px; }
 .hud-tr { top: 20px; right: 20px; border-width: 4px 4px 0 0; border-top-right-radius: 10px; }
 .hud-bl { bottom: 20px; left: 20px; border-width: 0 0 4px 4px; border-bottom-left-radius: 10px; }
 .hud-br { bottom: 20px; right: 20px; border-width: 0 4px 4px 0; border-bottom-right-radius: 10px; }
-
-.laser-line { 
-    position: absolute; left: 0; width: 100%; height: 3px; 
-    background: #c084fc; box-shadow: 0 0 20px #c084fc, 0 0 40px #a855f7; 
-    animation: scanSweep 3s linear infinite; z-index: 9; 
-}
-
-@keyframes scanSweep { 
-    0% { top: 5%; opacity: 0; } 
-    10% { opacity: 1; } 
-    90% { opacity: 1; } 
-    100% { top: 95%; opacity: 0; } 
-}
+.laser-line { position: absolute; left: 0; width: 100%; height: 3px; background: #c084fc; box-shadow: 0 0 20px #c084fc, 0 0 40px #a855f7; animation: scanSweep 2s linear infinite; z-index: 9; }
+@keyframes scanSweep { 0% { top: 5%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 95%; opacity: 0; } }
 @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 </style>
 
@@ -57,66 +48,104 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const resultBox = document.getElementById('resultBox');
 let isScanning = false;
+let scanInterval;
 
-// 1. Start iPad/Mobile Camera safely
-navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-    .then(stream => { video.srcObject = stream; })
-    .catch(err => { 
-        resultBox.innerHTML = "<span style='color:#ff3366;'>⚠️ Camera blocked. Please allow camera access in Safari/Chrome settings.</span>"; 
-    });
+function playBeep() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1);
+        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+        osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+    } catch(e) {}
+}
 
-// 2. Safe Cloud Sending Function
+function speakVoice(text) {
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1.0; utterance.pitch = 1.1;
+        window.speechSynthesis.speak(utterance);
+    }
+}
+
+document.getElementById('startScanBtn').addEventListener('click', function() {
+    this.style.display = 'none';
+    document.getElementById('cameraWrapper').style.display = 'block';
+    resultBox.style.display = 'flex';
+    
+    playBeep();
+    
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
+        .then(stream => { 
+            video.srcObject = stream; 
+            scanInterval = setInterval(() => { if(video.readyState === video.HAVE_ENOUGH_DATA) captureAndSend(); }, 800);
+        })
+        .catch(err => { resultBox.innerHTML = "<span style='color:#ff3366;'>⚠️ Camera blocked.</span>"; });
+});
+
 async function captureAndSend() {
-    if (isScanning) return; // Prevent hanging!
+    if (isScanning) return; 
     isScanning = true;
 
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth; canvas.height = video.videoHeight;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const frameData = canvas.toDataURL('image/jpeg', 0.7);
-
+    
     try {
         const res = await fetch('/api/scan-teacher', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ frame: frameData })
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ frame: canvas.toDataURL('image/jpeg', 0.6) })
         });
         const data = await res.json();
         
         if (data.status === 'checkin') {
+            playBeep();
+            speakVoice(`Check-in successful. Welcome, ${data.name}`);
             resultBox.innerHTML = `<span style="color:#00ff88; font-size:22px;">✅ Check-In: ${data.name}<br><small style="color:#fff;">Marked ${data.attendance_status}</small></span>`;
             document.querySelector('.laser-line').style.background = "#00ff88"; 
-        } else if (data.status === 'checkout') {
+            setTimeout(() => { isScanning = false; }, 2500);
+            return;
+        } 
+        else if (data.status === 'checkout') {
+            playBeep();
+            speakVoice(`Check-out successful. Goodbye, ${data.name}`);
             resultBox.innerHTML = `<span style="color:#00e5ff; font-size:22px;">👋 Check-Out: ${data.name}<br><small style="color:#fff;">Duty Hours: ${data.duty_hours}</small></span>`;
             document.querySelector('.laser-line').style.background = "#00e5ff"; 
-        } else if (data.status === 'duplicate') {
+            setTimeout(() => { isScanning = false; }, 2500);
+            return;
+        }
+        else if (data.status === 'duplicate') {
+            speakVoice(`Please wait before scanning again`);
             resultBox.innerHTML = `<span style="color:#facc15;">⚠️ Wait to scan again: ${data.message}</span>`;
             document.querySelector('.laser-line').style.background = "#facc15"; 
-        } else if (data.status === 'already_out') {
+            setTimeout(() => { isScanning = false; }, 2000);
+            return;
+        } 
+        else if (data.status === 'already_out') {
+            speakVoice(`You have already checked out`);
             resultBox.innerHTML = `<span style="color:#facc15;">⚠️ ${data.message}</span>`;
             document.querySelector('.laser-line').style.background = "#facc15";
-        } else if (data.status === 'spoof') {
+            setTimeout(() => { isScanning = false; }, 2000);
+            return;
+        }
+        else if (data.status === 'spoof') {
+            speakVoice("Fake face detected");
             resultBox.innerHTML = `<span style="color:#ff3366;">🚨 FAKE FACE BLOCKED!</span>`;
             document.querySelector('.laser-line').style.background = "#ff3366";
-        } else if (data.status === 'holiday') {
-            resultBox.innerHTML = `<span style="color:#00e5ff;">🌴 Today is a holiday!</span>`;
-        } else {
+            setTimeout(() => { isScanning = false; }, 2000);
+            return;
+        } 
+        else {
             resultBox.innerHTML = `<span style="color:#94a3b8; animation: pulseText 1.5s infinite;">Scanning surroundings...</span>`;
             document.querySelector('.laser-line').style.background = "#c084fc"; 
         }
-    } catch (e) {
-        console.log("Cloud processing...");
-    }
+    } catch (e) {}
 
-    // IMPORTANT: Wait 2.0 seconds before next scan to prevent server crash
-    setTimeout(() => { isScanning = false; }, 2000);
+    setTimeout(() => { isScanning = false; }, 300);
 }
-
-// 3. Take a picture every 1.5 seconds
-setInterval(() => {
-    if(video.readyState === video.HAVE_ENOUGH_DATA) {
-        captureAndSend();
-    }
-}, 1500);
 </script>
 {% endblock %}
