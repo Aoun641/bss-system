@@ -5,7 +5,7 @@ class Config:
     DATABASE = os.environ.get("DATABASE_PATH", "banbhan.db")
     
     # SYSTEM LIMITS
-    MAX_DEVICES = 10
+    MAX_DEVICES = 25
     MAX_LOGIN_ATTEMPTS = 5
     LOCKOUT_MINUTES = 15
     SESSION_TIMEOUT_HOURS = 12
